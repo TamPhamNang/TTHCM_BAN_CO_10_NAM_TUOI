@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Đường Về Trận Địa — Prototype</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="gameCanvas"></canvas>
+    <div id="hud" class="hud">
+      <div class="hud-top">
+        <div class="hud-panel mission-panel">
+          <div class="mission-icon" aria-hidden="true"></div>
+          <div class="small text-uppercase opacity-75">Nhiệm vụ</div>
+          <div id="missionName" class="fw-bold">M2 — Làm quen đơn vị</div>
+          <div id="objective">Khám phá doanh trại và tìm người phụ trách.</div>
+        </div>
+        <div id="timerPanel" class="hud-panel timer-panel d-none">
+          <div class="small text-uppercase opacity-75">Thời gian</div>
+          <div id="timer" class="fw-bold">--:--</div>
+        </div>
+      </div>
+
+      <div class="mini-map-panel">
+        <div class="map-heading"><span id="mapLevel">M2 · DOANH TRẠI</span><span>N ↑</span></div>
+        <canvas id="miniMapCanvas" width="160" height="100" aria-label="Bản đồ: chấm trắng là bạn, chấm vàng là mục tiêu"></canvas>
+        <div class="map-legend"><span>● Bạn</span><span>● Mục tiêu</span></div>
+      </div>
+      <div class="controls-hint"><kbd>W A S D</kbd> Di chuyển <kbd>Shift</kbd> Chạy <kbd>Space</kbd> Tương tác <kbd>Q</kbd> Né <kbd>Esc</kbd> Tạm dừng</div>
+
+      <div id="interactionPrompt" class="interaction-prompt d-none">Space — Tương tác</div>
+
+      <div class="hud-bottom">
+        <div class="hud-panel hp-panel">
+          <div class="small text-uppercase opacity-75">Sức khỏe</div>
+          <div class="hp-track"><div id="hpBar" class="hp-fill"></div></div>
+          <div id="hpText" class="small mt-1">100 / 100</div>
+        </div>
+
+        <div id="supplyPanel" class="hud-panel supply-panel d-none">
+          <div class="small text-uppercase opacity-75">Vật tư</div>
+          <div class="supply-content"><span class="supply-icon" aria-hidden="true"></span><span id="supplyName">--</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialogue" class="dialogue d-none">
+      <div id="dialoguePortrait" class="dialogue-portrait" aria-hidden="true"></div>
+      <div id="speaker" class="dialogue-speaker"></div>
+      <div id="dialogueText" class="dialogue-text"></div>
+      <div class="dialogue-hint">Space — Tiếp tục</div>
+    </div>
+
+    <div id="missionComplete" class="overlay d-none">
+      <div class="overlay-card">
+        <h2>Nhiệm vụ hoàn thành</h2>
+        <p id="completeText">Đã hoàn thành nhiệm vụ.</p>
+      </div>
+    </div>
+
+    <div id="endingPV" class="pv-overlay d-none" aria-label="PV kết thúc">
+      <div class="pv-fade" id="pvFade"></div>
+      <video id="endingVideo" class="ending-video" playsinline preload="auto"></video>
+      <div id="pvPlaceholder" class="pv-placeholder d-none">
+        <div class="pv-placeholder-card">
+          <div class="eyebrow">PV KẾT THÚC</div>
+          <h2>PV chưa được gắn</h2>
+          <p>Đặt video kết thúc vào <code>assets/video/ending.mp4</code> để phát PV tại đây.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="pauseMenu" class="overlay d-none">
+      <div class="overlay-card">
+        <h2>Tạm dừng</h2>
+        <div class="d-grid gap-2 mt-4">
+          <button id="resumeBtn" class="btn btn-light">Tiếp tục</button>
+          <button id="checkpointBtn" class="btn btn-outline-light">Chơi lại checkpoint</button>
+          <button id="settingsBtn" class="btn btn-outline-light">Cài đặt</button>
+          <button id="exitBtn" class="btn btn-outline-light">Thoát về màn hình chính</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="mainMenu" class="overlay">
+      <div class="overlay-card text-center">
+        <div class="menu-emblem" aria-hidden="true">★</div>
+        <div class="eyebrow">MỘT HÀNH TRÌNH QUA TRẬN ĐỊA</div>
+        <h1>Đường Về Trận Địa</h1>
+        <p class="menu-description">Nhận nhiệm vụ. Vận chuyển vật tư.<br>Trở về cùng đồng đội.</p>
+        <div id="loadingStatus" class="loading-status" role="status">Đang tải bộ đồ họa…</div>
+        <div class="d-grid gap-2 mt-4">
+          <button id="startBtn" class="btn btn-light btn-lg">Bắt đầu</button>
+          <button id="continueBtn" class="btn btn-outline-light">Tiếp tục</button>
+          <button id="aboutBtn" class="btn btn-outline-light">Giới thiệu</button>
+        </div>
+        <div id="menuMessage" class="small mt-3 opacity-75"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/assets.js"></script>
+  <script src="js/levels/level2.js"></script>
+  <script src="js/scene.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/collision.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/dialogue.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
