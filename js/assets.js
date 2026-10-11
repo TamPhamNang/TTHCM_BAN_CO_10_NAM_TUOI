@@ -12,7 +12,7 @@ class GameAssets {
       try {
         const image = await new Promise((resolve, reject) => {
           const img = new Image(); img.onload = () => resolve(img); img.onerror = reject;
-          img.src = `assets/${name}.png${name === "map_M2" ? `?v=${M2_MAP.revision}` : ""}`;
+          img.src = `assets/images/${name}.png${name === "map_M2" ? `?v=${M2_MAP.revision}` : ""}`;
         });
         this.images[name] = image;
       } catch { this.failed.push(name); }

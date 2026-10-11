@@ -1,5 +1,8 @@
 # Bộ đồ họa
 
+Toàn bộ ảnh nằm trong `assets/images/`, gồm ảnh nhân vật, công trình, HUD, bản đồ
+và ảnh xem trước. Video nằm trong `assets/video/`.
+
 Các PNG gốc được giữ nguyên. `js/assets.js` tải ảnh, tách nền theo vùng nối với biên,
 cắt sprite theo tọa độ riêng của từng hàng và lưu kết quả trong bộ nhớ trình duyệt.
 Hai bảng animation là ảnh tham chiếu có khoảng cách không đều, không phải lưới sprite cố định.
@@ -18,7 +21,7 @@ kho phía tây bắc, Đơn vị phía bắc trung tâm, sinh hoạt/quân sự 
 bếp/nghỉ phía đông nam, liên lạc/hậu cần phía tây nam, sân giữa và cổng chính phía nam.
 Chòi gác nằm bên phải cổng. Điểm xuất phát ở khu sinh hoạt; cán bộ đứng trước nhà Đơn vị.
 Vị trí công trình, đường đi, vùng va chạm và bản đồ nhỏ dùng chung cấu hình này.
-Nền địa hình M2 sử dụng `assets/map_M2.png`, ánh xạ vào thế giới 1200 × 700.
+Nền địa hình M2 sử dụng `assets/images/map_M2.png`, ánh xạ vào thế giới 1200 × 700.
 Ảnh nền mới đã có cây, đường đất, hàng rào, cổng đóng và chòi gác; game thêm các công trình
 và nhân vật. Vùng va chạm của hàng rào/cổng/chòi gác được cấu hình theo ảnh, không vẽ chồng lại.
 Ảnh nền được tải với phiên bản `M2_MAP.revision` để tránh dùng ảnh cũ trong cache trình duyệt.
