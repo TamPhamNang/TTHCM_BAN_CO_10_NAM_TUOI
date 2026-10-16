@@ -1,5 +1,28 @@
 # Bộ đồ họa
 
+## Bản đang chạy · Hạt Muối Trường Kỳ
+
+Game hiện nạp ảnh từ `assets/images/Chapter_1/` bằng `js/chapter-assets.js`:
+
+- `can_cu.png`: nền căn cứ màn 1; vị trí vật phẩm và va chạm cấu hình trong `js/levels/chapter1.js`.
+- `map_tro_truyen_dau_chuong.png`: nền phòng họp mở đầu có bản đồ, đèn dầu và bàn làm việc.
+- `animation_nhan_vat_chinh.png`: các hàng idle, walk, run, interact, pickup, carry của Kiên.
+- `nhan_vat_phu.png`: Bác Hồ, Nguyễn Lương Bằng, lính xét vé, bà cụ, diêm dân nam/nữ.
+- `aos.png`, `giay_thong_hanh.png`, `la_ban.png`, `so_tay.png`, `tien.png`: vật phẩm trong cảnh và ba lô.
+- `tui_do.png`, `khung_hoi_thoai.png`: ảnh tham chiếu giao diện; game dùng chữ HTML động để đọc được trên màn hình nhỏ.
+- `toa_tau_hoa.png`, `lang_muoi.png`, `ben_thuyen.png`: nền màn 2–4.
+- `xe_muoi_hong.png`, `xo_nuoc.png`, `ro_cam.png`, `thoi_vang.png`: xe cần sửa, gàu nước, thúng cam và vàng tương tác.
+- `linh_canh.png`: sheet đứng, đi và kiểm tra giấy tờ của lính xét vé.
+- `nhan_vat_chinh_cai_trang.png`: trang phục dân thường của Kiên trên tàu và tại làng muối; dùng lại một tư thế cho nhân vật phụ ở bến.
+
+Game cũng nạp cả 4 bảng tổng hợp: `Bảng tài sản Chương 1 Việt Nam 1940s.png`, `Bộ asset Chương 1_ Hành trình Việt Nam.png`, `Bộ tài sản game Chương 1 Việt Nam 1945.png`, `Bộ tài sản game Chương 1 Việt Nam.png`. Tọa độ cắt nằm trong `js/chapter-atlas.js`. Các vùng bao muối, dụng cụ, vàng đơn, thùng gỗ, sàn, khung giấy, sổ tay và biểu tượng đã được đưa vào game. Hoạt ảnh chính dùng hình nguyên vẹn từ sheet gốc lớn, được tách và đăng ký điểm neo bởi `js/animation.js`; hình nhỏ trong bảng chỉ còn là tham chiếu hướng/tư thế. Xem thêm `docs/chapter1-art.md`.
+
+Ảnh nguồn được giữ nguyên. Cắt nền và sprite diễn ra trong bộ nhớ Canvas. Cảnh tàu, ruộng muối, bến thuyền được vẽ bằng `js/chapter-scene.js` và ghép nhân vật từ bộ ảnh này. Chạy qua HTTP theo README ở thư mục gốc.
+
+## Ghi chép bộ ảnh prototype trước đây
+
+Phần bên dưới mô tả bộ ảnh cũ và prototype `js/game.js`, không phải đường dẫn tài nguyên của Chương 1 hiện tại.
+
 Toàn bộ ảnh nằm trong `assets/images/`, gồm ảnh nhân vật, công trình, HUD, bản đồ
 và ảnh xem trước. Video nằm trong `assets/video/`.
 

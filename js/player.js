@@ -20,6 +20,9 @@ class Player {
     this.visualAction = null;
     this.lastCarryingSupply = false;
     this.moving = false;
+    this.motionBlend = 0;
+    this.heading = Math.PI / 2;
+    this.facingAngle = this.heading;
   }
 
   getRect(x = this.x, y = this.y) {
@@ -32,18 +35,12 @@ class Player {
   }
 
   update(dt, input, collision) {
-    this.animationTime += dt;
     if (this.dodgeTimer > 0) this.dodgeTimer -= dt;
     if (this.invulnerableTimer > 0) this.invulnerableTimer -= dt;
 
     if (this.dodgeTimer > 0) return;
 
-    let dx = 0, dy = 0;
-
-    if (input.isDown("w")) dy -= 1;
-    if (input.isDown("s")) dy += 1;
-    if (input.isDown("a")) dx -= 1;
-    if (input.isDown("d")) dx += 1;
+    let {x: dx, y: dy} = input.movement();
 
     if (dx === 0 && dy === 0) {
       this.moving = false;
@@ -53,15 +50,7 @@ class Player {
 
     this.moving = true;
 
-    if (Math.abs(dx) > Math.abs(dy)) {
-      this.direction = dx > 0 ? "right" : "left";
-    } else {
-      this.direction = dy > 0 ? "down" : "up";
-    }
-
-    const length = Math.hypot(dx, dy) || 1;
-    dx /= length;
-    dy /= length;
+    this.face(dx, dy);
 
     const running = input.isDown("shift") && !this.carryingSupply;
     const speed = running ? this.runSpeed : this.speed;
@@ -72,11 +61,36 @@ class Player {
       this.state = running ? "run" : "walk";
     }
 
+    const before = {x: this.x, y: this.y};
     const nx = this.x + dx * speed * dt;
     const ny = this.y + dy * speed * dt;
 
     if (!collision.blocks(this.getRect(nx, this.y))) this.x = nx;
     if (!collision.blocks(this.getRect(this.x, ny))) this.y = ny;
+    const distance = Math.hypot(this.x - before.x, this.y - before.y);
+    this.moving = distance > .0001;
+    if (this.moving) { this.animationTime += distance / this.speed; this.visualAction = null; }
+    else this.state = this.carryingSupply ? "carry" : "idle";
+  }
+
+  startAction(name, duration = .45) { this.visualAction = {name, elapsed: 0, duration}; }
+  face(dx, dy) {
+    this.heading = Math.atan2(dy, dx);
+    // Keep the pose near diagonal boundaries; the travel vector stays continuous.
+    const horizontal = Math.abs(dx), vertical = Math.abs(dy);
+    if (horizontal > vertical * 1.25) this.direction = dx > 0 ? "right" : "left";
+    else if (vertical > horizontal * 1.25) this.direction = dy > 0 ? "down" : "up";
+    else if (["up", "down"].includes(this.direction)) this.direction = dy > 0 ? "down" : "up";
+    else this.direction = dx > 0 ? "right" : "left";
+  }
+  updateVisual(dt) {
+    this.motionBlend += ((this.moving ? 1 : 0) - this.motionBlend) * (1 - Math.exp(-dt / .07));
+    const turn = Math.atan2(Math.sin(this.heading - this.facingAngle), Math.cos(this.heading - this.facingAngle));
+    this.facingAngle += turn * (1 - Math.exp(-dt / .08));
+    if (this.visualAction) {
+      this.visualAction.elapsed += dt;
+      if (this.visualAction.elapsed >= this.visualAction.duration) this.visualAction = null;
+    }
   }
 
   dodge(input) {
@@ -103,19 +117,19 @@ class Player {
 
   render(ctx) {
     if (this.carryingSupply !== this.lastCarryingSupply) {
-      this.visualAction = {name: this.carryingSupply ? "pickup" : "place", start: performance.now(), duration: 650};
+      this.startAction(this.carryingSupply ? "pickup" : "place");
       this.lastCarryingSupply = this.carryingSupply;
     }
     let state = this.state, phase = null;
     if (this.visualAction) {
-      phase = (performance.now() - this.visualAction.start) / this.visualAction.duration;
+      phase = this.visualAction.elapsed / this.visualAction.duration;
       if (phase < 1) state = this.visualAction.name;
       else { this.visualAction = null; phase = null; }
     }
     ctx.save();
     if (this.invulnerableTimer > 0) ctx.globalAlpha = .65;
     window.gameArt.character(ctx, this.x, this.y, state, this.direction,
-      state === "carry" && !this.moving ? 0 : this.animationTime, false, phase);
+      state === "carry" && !this.moving ? 0 : this.animationTime, false, phase, {blend: this.motionBlend, heading: this.facingAngle});
     ctx.restore();
   }
 }

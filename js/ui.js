@@ -25,12 +25,13 @@ class UI {
   }
 
   setTimer(seconds, visible = true) {
-    this.timerPanel.classList.toggle("d-none", !visible);
+    if (this.timerPanel.classList.contains("d-none") === visible) this.timerPanel.classList.toggle("d-none", !visible);
     if (!visible) return;
     const safe = Math.max(0, Math.ceil(seconds));
     const min = String(Math.floor(safe / 60)).padStart(2, "0");
     const sec = String(safe % 60).padStart(2, "0");
-    this.timer.textContent = `${min}:${sec}`;
+    const label = `${min}:${sec}`;
+    if (this.timer.textContent !== label) this.timer.textContent = label;
   }
 
   setHP(hp, max) {
@@ -45,16 +46,20 @@ class UI {
   }
 
   showPrompt(text = "Space — Tương tác") {
-    this.prompt.textContent = text;
-    this.prompt.classList.remove("d-none");
+    if (this.prompt.textContent !== text) this.prompt.textContent = text;
+    if (this.prompt.classList.contains("d-none")) this.prompt.classList.remove("d-none");
   }
 
   hidePrompt() {
-    this.prompt.classList.add("d-none");
+    if (!this.prompt.classList.contains("d-none")) this.prompt.classList.add("d-none");
   }
 
   showDialogue(speaker, text) {
     document.getElementById("dialoguePortrait").classList.toggle("soldier-portrait", speaker !== "Cán bộ phụ trách");
+    document.getElementById("dialoguePortrait").classList.toggle("bac-portrait", speaker === "Bác Hồ");
+    const portrait = speaker.includes("Bác Hồ") ? "bac" : speaker.includes("Nguyễn") ? "bang" : speaker.includes("Lính") ? "guard" : speaker.includes("diêm dân") ? (speaker.startsWith("Cô") ? "woman" : "farmer") : null;
+    const art = portrait === "bac" ? window.gameArt?.images.portraitBac : portrait ? window.gameArt?.images[portrait] : window.gameArt?.playerPortrait?.();
+    if (art) document.getElementById("dialoguePortrait").style.backgroundImage = `url("${art.toDataURL()}")`;
     this.speaker.textContent = speaker;
     this.dialogueText.textContent = text;
     this.dialogue.classList.remove("d-none");
@@ -107,11 +112,13 @@ class UI {
   }
 
   stepComplete(text) {
+    document.querySelectorAll(".step-notice").forEach(el => el.remove());
     const el = document.createElement("div");
     el.className = "step-notice";
+    el.setAttribute("role", "status");
     el.textContent = text;
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), 900);
+    setTimeout(() => el.remove(), 2400);
   }
 
   flashAndShake() {
