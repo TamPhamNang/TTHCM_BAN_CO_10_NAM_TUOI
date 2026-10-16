@@ -1,5 +1,6 @@
 /* Visual skin assembled from Chapter 1's source boards; live text stays HTML. */
 :root { --ink: #343d2c; --brass: #c2a161; }
+html, body, button, input, select, textarea { font-family: "Times New Roman", Times, serif; }
 .mission-panel { border-color: #b59b63; background: linear-gradient(125deg, #233f30ed, #172e25f5); }
 .mission-icon { background-size: contain; background-repeat: no-repeat; border: 0; filter: drop-shadow(0 2px 2px #09190f88); }
 .mini-map-panel { border-color: #b59b63; background: #182d25f0; }
@@ -21,11 +22,11 @@
 .interaction-prompt { border: 1px solid #ceac67; padding: 8px 16px; background: #20392df0; font-size: 12px; }
 .dialogue { border: 12px solid transparent; border-image: var(--art-uiPaper) 12 fill / 12px / 0 stretch; background: #efdcaf; color: var(--ink); box-shadow: 0 12px 35px #0b1c18a6; padding: 15px 22px 12px 153px; min-height: 172px; bottom: 5.5%; }
 .dialogue-portrait { border: 0; left: 8px; top: 0; bottom: 0; width: 122px; background-color: transparent; filter: drop-shadow(1px 2px 1px #8f764b66); }
-.dialogue-speaker { color: #655334; font-family: Georgia, 'Times New Roman', serif; font-size: 15px; font-weight: 700; letter-spacing: .025em; text-transform: none; margin-bottom: 7px; }
+.dialogue-speaker { color: #655334; font-family: 'Times New Roman', Times, serif; font-size: 15px; font-weight: 700; letter-spacing: .025em; text-transform: none; margin-bottom: 7px; }
 .dialogue-text { font-size: 16px; line-height: 1.6; }
 .dialogue-next { border-color: #967947; border-radius: 3px; padding: 7px 13px; background: #354833; margin-top: 8px; }
 .journal-card { border: 3px solid #a98c55; border-radius: 7px; background: linear-gradient(135deg, #344633, #142c23); box-shadow: inset 0 0 0 3px #192d20, inset 0 0 0 4px #b99a5b66, 0 24px 90px #071411cc; }
-.journal-heading h2 { font-family: Georgia, 'Times New Roman', serif; color: #f1ddad; }
+.journal-heading h2 { font-family: 'Times New Roman', Times, serif; color: #f1ddad; }
 .inventory-grid { gap: 12px; }
 .inventory-item { grid-template-columns: 66px 1fr; padding: 12px; border: 1px solid #a78c57; border-radius: 4px; background: linear-gradient(125deg, #ecdbb5, #d9c595); box-shadow: inset 0 0 0 3px #f7eac333; }
 .inventory-item > .item-art { height: 68px; background-size: 75% auto; background-color: #22362b; border: 4px solid #a78b54; border-radius: 6px; box-shadow: inset 0 0 0 1px #14231b, 0 1px 1px #68533566; }
@@ -35,7 +36,7 @@
 .inventory-item small { font-size: 11px; }
 .inventory-item:hover { background: #f7e5bc; transform: translateY(-1px); }
 .hint-pages { background: var(--art-uiHintBook) center / 100% 100% no-repeat; min-height: 260px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 26px 22px 28px; color: #4b402c; }
-.hint-pages .notebook-caption { padding: 145px 15px 0; margin: 0; background: none; color: #6b5536; text-align: center; align-self: end; font-family: Georgia, 'Times New Roman', serif; font-size: 12px; }
+.hint-pages .notebook-caption { padding: 120px 15px 0; margin: 0; background: var(--art-portraitBac) center 10px/70px 100px no-repeat; color: #6b5536; text-align: center; align-self: center; font-family: 'Times New Roman', Times, serif; font-size: 14px; }
 .hint-pages > p:last-child { margin: 0; align-self: center; padding: 0 3px 0 10px; font-size: 14px; line-height: 1.7; }
 #journal[data-view='hint'] .journal-card { width: min(780px, calc(100vw - 32px)); }
 .step-notice { border: 8px solid transparent; border-image: var(--art-uiPaper) 12 fill / 8px / 0 stretch; background: #e5d0a3; color: #3e4632; box-shadow: 0 5px 18px #10261a88; padding: 5px 12px; font-weight: 600; }
@@ -49,6 +50,30 @@
 .move-stick small { position: absolute; bottom: 4px; width: 100%; text-align: center; color: #ead9b5; font-size: 10px; pointer-events: none; }
 .hud.prologue-room .mini-map-panel, .hud.prologue-room .chapter-progress { display: none; }
 .hud.train-room .controls-hint { display: none; }
+.hud.river-room .mini-map-panel { display: none; }
+.river-status { position: absolute; top: 23px; right: 24px; width: 235px; padding: 13px 16px; border: 1px solid #b89c63; border-radius: 4px; background: #182f27ee; display: grid; gap: 8px; font-size: 15px; color: #f4e5c3; }
+.river-status progress { display: block; width: 100%; height: 12px; accent-color: #c8ad6a; }
+.river-status span { font-size: 14px; line-height: 1.4; }
+.river-actions { position: absolute; right: 24px; bottom: 110px; pointer-events: auto; }
+.rope-locks { display: flex; gap: 16px; justify-content: center; margin: 24px 0; }
+.rope-lock { display: grid; gap: 12px; min-width: 95px; padding: 18px; background: #bda16b; color: #302d20; border: 3px solid #7c6039; border-radius: 10px; cursor: pointer; }
+.rope-lock span { display: block; font-size: 48px; line-height: 1; transition: transform .18s ease; }
+.rope-lock.aligned { background: #bdd0a0; border-color: #527647; }
+.rope-puzzle p { font-size: 18px; line-height: 1.6; }
+@media (max-width: 700px) {
+  .river-status { top: 119px; right: 12px; width: 176px; padding: 8px 10px; font-size: 14px; gap: 5px; }
+  .river-status span { font-size: 13px; }
+  .river-actions { right: 12px; bottom: 124px; }
+  .hud.river-room .mission-panel { max-width: calc(100vw - 24px); }
+  .rope-locks { gap: 8px; }.rope-lock { min-width: 72px; padding: 12px; }
+}
+@media (max-height: 550px) {
+  .hud.river-room .mission-panel { max-width: 46vw; }
+  .river-status { top: 12px; right: 12px; width: 180px; padding: 8px; font-size: 13px; }
+  .river-status span { font-size: 12px; }
+  .hud.river-room .chapter-toolbar { top: 140px; }
+  .river-actions { right: 12px; bottom: 22px; }
+}
 @media (max-height: 550px), (max-width: 700px) {
   .free-controls { left: 14px; bottom: 44px; gap: 10px; }
   .move-stick { width: 84px; height: 84px; }

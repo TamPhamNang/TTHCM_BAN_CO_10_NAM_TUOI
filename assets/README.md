@@ -19,6 +19,12 @@ Game cũng nạp cả 4 bảng tổng hợp: `Bảng tài sản Chương 1 Việ
 
 Ảnh nguồn được giữ nguyên. Cắt nền và sprite diễn ra trong bộ nhớ Canvas. Cảnh tàu, ruộng muối, bến thuyền được vẽ bằng `js/chapter-scene.js` và ghép nhân vật từ bộ ảnh này. Chạy qua HTTP theo README ở thư mục gốc.
 
+## Chương 2 và chữ Times New Roman
+
+`js/levels/chapter2.js` khai báo ảnh nguồn trong `assets/images/Chapter_2/`: `tram_gac_ven_song.png`, `tran_cuong_phong.png`, `bai_lau_say.png`, xương, sào, bạt và sheet lính/chó. Hai bảng tổng hợp cung cấp thuyền, ca-nô, bùn, lá và bạt đã trải. Các vùng có nhãn/chữ mẫu được loại khỏi vùng cắt. Cảnh và cơ chế ở `js/river-scene.js`, `js/river-chapter.js`.
+
+`assets/ui/pass-times.svg` thay giấy thông hành có chữ in sẵn; các dòng tiếng Việt dùng Times New Roman. `notebook-pages.svg` và `parchment.svg` cung cấp nền sạch cho sổ/khung giấy, mọi nội dung đặt bằng HTML/Canvas Times New Roman. Ảnh gốc được giữ nguyên, không còn dùng phần chữ sinh sẵn làm chữ giao diện.
+
 ## Ghi chép bộ ảnh prototype trước đây
 
 Phần bên dưới mô tả bộ ảnh cũ và prototype `js/game.js`, không phải đường dẫn tài nguyên của Chương 1 hiện tại.

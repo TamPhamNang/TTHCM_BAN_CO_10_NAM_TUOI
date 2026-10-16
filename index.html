@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hạt Muối Trường Kỳ — Chương 1</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/chapter-art.css?v=7">
+  <title>Hạt Muối Trường Kỳ — Chương 1 &amp; 2</title>
+  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/chapter-art.css?v=8">
 </head>
 <body>
   <main id="game-shell">
@@ -43,6 +43,12 @@
         <button id="pauseBtn" class="btn btn-outline-light" aria-label="Tạm dừng">Ⅱ</button>
       </div>
       <div id="chapterProgress" class="chapter-progress">Chương 1 · Mật lệnh mùa đông</div>
+      <div id="riverStatus" class="river-status d-none" role="status" aria-live="polite">
+        <strong id="riverMeterLabel">Mức phát hiện: 0%</strong>
+        <progress id="riverMeter" max="100" value="0" aria-label="Trạng thái nhiệm vụ Chương 2"></progress>
+        <span id="riverStatusText"></span>
+      </div>
+      <div id="riverActions" class="river-actions d-none"><button id="riverActionBtn" class="btn btn-light">Tương tác</button></div>
       <div id="dockControls" class="dock-controls d-none">
         <div class="dock-actions">
           <button id="crouchBtn" class="btn btn-light" aria-pressed="false">C · Ngồi thấp</button>
@@ -83,11 +89,11 @@
     <div id="chapterEnd" class="overlay d-none" role="dialog" aria-modal="true" aria-labelledby="chapterEndTitle">
       <div class="overlay-card text-center">
         <div class="menu-emblem" aria-hidden="true">✦</div>
-        <div class="eyebrow">ĐÃ HOÀN THÀNH 4 / 4 MÀN</div>
+        <div id="chapterEndProgress" class="eyebrow">ĐÃ HOÀN THÀNH 4 / 4 MÀN</div>
         <h2 id="chapterEndTitle">Mật lệnh mùa đông<br>đã hoàn thành!</h2>
-        <p>Kiên đã chuẩn bị hành trang, qua trạm kiểm tra, giúp bà con Văn Lý và đưa muối xuống thuyền an toàn.</p>
-        <p class="menu-description">Phía trước là Chương 2: Ngược dòng mùa mưa bão.<br>Chương này sẽ được phát triển tiếp.</p>
-        <div class="d-grid gap-2"><button id="chapterMenuBtn" class="btn btn-light">Về màn hình chính</button><button id="replayBtn" class="btn btn-outline-light">Chơi lại Chương 1</button></div>
+        <p id="chapterEndSummary">Kiên đã chuẩn bị hành trang, qua trạm kiểm tra, giúp bà con Văn Lý và đưa muối xuống thuyền an toàn.</p>
+        <p id="chapterEndNote" class="menu-description">Phía trước là Chương 2: Ngược dòng mùa mưa bão.</p>
+        <div class="d-grid gap-2"><button id="nextChapterBtn" class="btn btn-light">Tiếp tục · Chương 2</button><button id="chapterMenuBtn" class="btn btn-outline-light">Về màn hình chính</button><button id="replayBtn" class="btn btn-outline-light">Chơi lại Chương 1</button></div>
       </div>
     </div>
 
@@ -107,11 +113,12 @@
         <div class="menu-emblem" aria-hidden="true">★</div>
         <div class="eyebrow">HÀNH TRÌNH 2 VẠN TẤN MUỐI</div>
         <h1>Hạt Muối<br>Trường Kỳ</h1>
-        <p class="menu-description">Cùng cậu lính trẻ Kiên khám phá, giải đố<br>và giữ trọn những hạt muối Văn Lý.<br><strong>Chương 1 · Mật lệnh mùa đông</strong></p>
+        <p class="menu-description">Cùng cậu lính trẻ Kiên khám phá, giải đố<br>và giữ trọn những hạt muối Văn Lý.<br><strong>Chương 1 &amp; 2 · Hà Nội đến sông Đáy</strong></p>
         <div id="loadingStatus" class="loading-status" role="status">Đang tải bộ đồ họa…</div>
         <div class="d-grid gap-2 mt-4">
           <button id="startBtn" class="btn btn-light btn-lg">Bắt đầu</button>
           <button id="continueBtn" class="btn btn-outline-light">Tiếp tục</button>
+          <button id="chapter2Btn" class="btn btn-outline-light">Chơi Chương 2 · Hành trình trên sông</button>
           <button id="aboutBtn" class="btn btn-outline-light">Giới thiệu</button>
         </div>
         <p id="saveStatus" class="loading-status">Tự động lưu tiến trình</p>
@@ -121,21 +128,24 @@
   </main>
 
   <script src="js/assets.js"></script>
-  <script src="js/animation.js?v=7"></script>
-  <script src="js/chapter-atlas.js?v=7"></script>
-  <script src="js/chapter-assets.js?v=7"></script>
+  <script src="js/animation.js?v=8"></script>
+  <script src="js/chapter-atlas.js?v=8"></script>
+  <script src="js/chapter-assets.js?v=8"></script>
   <script src="js/levels/level2.js"></script>
   <script src="js/scene.js"></script>
-  <script src="js/input.js?v=7"></script>
-  <script src="js/player.js?v=7"></script>
-  <script src="js/collision.js?v=7"></script>
+  <script src="js/input.js?v=8"></script>
+  <script src="js/player.js?v=8"></script>
+  <script src="js/collision.js?v=8"></script>
   <script src="js/camera.js"></script>
   <script src="js/dialogue.js"></script>
-  <script src="js/ui.js?v=7"></script>
+  <script src="js/ui.js?v=8"></script>
   <script src="js/save.js"></script>
-  <script src="js/levels/chapter1.js?v=7"></script>
-  <script src="js/chapter-scene.js?v=7"></script>
-  <script src="js/chapter-game.js?v=7"></script>
+  <script src="js/levels/chapter1.js?v=8"></script>
+  <script src="js/levels/chapter2.js?v=8"></script>
+  <script src="js/chapter-scene.js?v=8"></script>
+  <script src="js/river-chapter.js?v=8"></script>
+  <script src="js/river-scene.js?v=8"></script>
+  <script src="js/chapter-game.js?v=8"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

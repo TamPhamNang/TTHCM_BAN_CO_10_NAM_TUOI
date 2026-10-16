@@ -19,7 +19,7 @@ class ChapterScene extends SceneRenderer {
     const key = `${level}:${width}:${height}`;
     if (this.ambient.has(key)) return this.ambient.get(key);
     const canvas = document.createElement("canvas"); canvas.width = width; canvas.height = height;
-    const ctx = canvas.getContext("2d"), backdrop = this.art.images[{1: "can_cu", 2: "toa_tau_hoa", 3: "lang_muoi", 4: "ben_thuyen"}[level]];
+    const ctx = canvas.getContext("2d"), backdrop = this.art.images[GAME_LEVELS[level]?.background || {1: "can_cu", 2: "toa_tau_hoa", 3: "lang_muoi", 4: "ben_thuyen"}[level]];
     if (backdrop) {
       const scale = Math.max(width / backdrop.width, height / backdrop.height);
       ctx.globalAlpha = .32; ctx.filter = "blur(15px)";
@@ -29,7 +29,7 @@ class ChapterScene extends SceneRenderer {
     this.ambient.set(key, canvas); return canvas;
   }
   label(ctx, text, x, y, color = "#f2e3b8", size = 13) {
-    ctx.save(); ctx.font = `600 ${size}px system-ui`; ctx.textAlign = "center";
+    ctx.save(); ctx.font = `600 ${size}px \"Times New Roman\"`; ctx.textAlign = "center";
     const width = ctx.measureText(text).width + 20;
     ctx.fillStyle = "#182c24e8"; ctx.beginPath(); ctx.roundRect(x - width / 2, y - size - 4, width, size + 13, 4); ctx.fill();
     ctx.fillStyle = color; ctx.fillText(text, x, y); ctx.restore();
@@ -39,6 +39,7 @@ class ChapterScene extends SceneRenderer {
     ctx.strokeStyle = stroke; ctx.lineWidth = 3; ctx.strokeRect(x, y, w, h);
   }
   render(ctx, game) {
+    if(game.river){game.riverScene.render(ctx);return;}
     if (game.prologueRoom) { this.prologue(ctx, game); return; }
     if (game.level === 1) this.camp(ctx, game);
     if (game.level === 2) this.trainScene(ctx, game);
@@ -68,7 +69,7 @@ class ChapterScene extends SceneRenderer {
           if (this.art.images[object.id]) this.art.draw(ctx, object.id, object.x, object.y + 10, object.id === "tools" ? 38 : 48);
           else {
             ctx.fillStyle = "#e4d3a1"; ctx.beginPath(); ctx.arc(object.x, object.y - 13, 20, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "#354735"; ctx.font = "27px Georgia"; ctx.textAlign = "center";
+            ctx.fillStyle = "#354735"; ctx.font = "27px \"Times New Roman\""; ctx.textAlign = "center";
             ctx.fillText(object.icon, object.x, object.y - 4);
           }
         }
@@ -172,7 +173,7 @@ class ChapterScene extends SceneRenderer {
     }
     const button = layout.sitButton;
     this.panel(ctx, button.x, button.y, button.width, button.height, game.train.hidden.length === 3 ? "#526645ee" : "#312e26ee");
-    ctx.fillStyle = "#f0e6bd"; ctx.font = "bold 16px system-ui"; ctx.textAlign = "center";
+    ctx.fillStyle = "#f0e6bd"; ctx.font = "bold 16px \"Times New Roman\""; ctx.textAlign = "center";
     ctx.fillText(game.train.seated ? "Đưa giấy từ ba lô ↑" : game.trainPose ? "Đang ngồi xuống…" : "Ngồi vào ghế", button.x + button.width / 2, button.y + 30);
     this.label(ctx, "CHUYẾN TÀU ĐÊM · HÀ NỘI → NAM ĐỊNH", 665, 83, "#eed6a0", 14);
     this.vignette(ctx, .24);
@@ -221,7 +222,7 @@ class ChapterScene extends SceneRenderer {
       this.art.draw(ctx, "saltBag", p.x, p.y + 24, 43);
       if (done) {
         ctx.fillStyle = "#344a30"; ctx.beginPath(); ctx.arc(p.x + 19, p.y - 17, 10, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = "#e9d29d"; ctx.font = "bold 12px system-ui"; ctx.textAlign = "center"; ctx.fillText("✓", p.x + 19, p.y - 13);
+        ctx.fillStyle = "#e9d29d"; ctx.font = "bold 12px \"Times New Roman\""; ctx.textAlign = "center"; ctx.fillText("✓", p.x + 19, p.y - 13);
       }
     });
     const beamX = b.x + (d.beamColumn() + .5) * b.size;

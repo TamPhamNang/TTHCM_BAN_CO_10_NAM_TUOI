@@ -4,6 +4,8 @@ class ChapterAssets extends GameAssets {
       "toa_tau_hoa", "lang_muoi", "ben_thuyen", "map_tro_truyen_dau_chuong", "xe_muoi_hong", "xo_nuoc", "ro_cam", "thoi_vang", "linh_canh", "nhan_vat_chinh_cai_trang", "kien_ngoi_toa_tau_v1",
       ...Object.values(CHAPTER_ATLAS.boards)];
     let done = 0;
+    const total = files.length + Object.keys(CHAPTER_TWO_ART.files).length + 3;
+    const tick = () => onProgress(++done, total);
     await Promise.all(files.map(async name => {
       try {
         this.images[name] = await new Promise((resolve, reject) => {
@@ -11,7 +13,7 @@ class ChapterAssets extends GameAssets {
           image.src = `assets/images/Chapter_1/${encodeURIComponent(name)}.png?v=${CHAPTER_ATLAS.revision}`;
         });
       } catch { this.failed.push(name); }
-      onProgress(++done, files.length);
+      tick();
     }));
     for (const [id, name] of Object.entries({disguise: "aos", pass: "giay_thong_hanh", compass: "la_ban", notebook: "so_tay", gold: "tien",
       cart: "xe_muoi_hong", bucket: "xo_nuoc", basket: "ro_cam", goldBar: "thoi_vang"})) {
@@ -50,6 +52,8 @@ class ChapterAssets extends GameAssets {
         talk: talk.slice(0, 3), pickup: [idle[0], talk[1], idle[0]], carry: row(780, 260)});
     }
     this.prepareAtlas();
+    await this.prepareRiverArt(tick);
+    await this.prepareTypefaceArt(tick);
     if (this.images.kien_ngoi_toa_tau_v1) this.images.kienSeated = this.trim(this.crop(this.images.kien_ngoi_toa_tau_v1, null, 1024));
     if (this.images.map_tro_truyen_dau_chuong) {
       this.images.room = this.images.map_tro_truyen_dau_chuong;
@@ -81,6 +85,36 @@ class ChapterAssets extends GameAssets {
       if (id.startsWith("ui") || id.startsWith("portrait") || id === "mapPaper") {
         document.documentElement.style.setProperty(`--art-${id}`, `url("${image.toDataURL()}")`);
       }
+    }
+  }
+  async prepareRiverArt(tick) {
+    await Promise.all(Object.entries(CHAPTER_TWO_ART.files).map(async ([id, name]) => {
+      try {
+        this.images[id] = await new Promise((resolve, reject) => {
+          const image = new Image(); image.onload = () => resolve(image); image.onerror = reject;
+          image.src = `assets/images/Chapter_2/${encodeURIComponent(name)}.png?v=8`;
+        });
+      } catch { this.failed.push(name); }
+      tick();
+    }));
+    for (const id of ["bone", "riverTarp", "bamboo"]) if (this.images[id]) this.images[id] = this.extract(this.images[id]);
+    for (const [id, region] of Object.entries(CHAPTER_TWO_ART.regions)) {
+      if (this.images[region.source]) this.images[id] = this.extract(this.images[region.source], region.rect, region);
+    }
+  }
+  async prepareTypefaceArt(tick) {
+    // Vector replacements have live Times New Roman text or deliberately blank
+    // paper. No generated lettering from the reference boards enters the UI.
+    for (const [id, filename] of Object.entries({pass:"pass-times",uiHintBook:"notebook-pages",uiPaper:"parchment"})) {
+      try {
+        const image = await new Promise((resolve, reject) => {
+          const img = new Image(); img.onload = () => resolve(img); img.onerror = reject;
+          img.src = `assets/ui/${filename}.svg?v=8`;
+        });
+        this.images[id] = this.crop(image, null, 1200);
+        if (id.startsWith("ui")) document.documentElement.style.setProperty(`--art-${id}`, `url("${this.images[id].toDataURL()}")`);
+      } catch { this.failed.push(filename); }
+      tick();
     }
   }
   setCostume(disguised) { this.disguised = !!disguised; }

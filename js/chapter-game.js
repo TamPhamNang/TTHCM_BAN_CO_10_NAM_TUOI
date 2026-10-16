@@ -18,11 +18,15 @@ class ChapterGame {
     window.addEventListener("pagehide", () => { if (this.state !== "menu") this.saveProgress(); });
     this.canvas.addEventListener("pointerdown", event => this.pointerDown(event));
     this.canvas.addEventListener("pointerup", event => this.pointerUp(event));
+    this.canvas.addEventListener("pointermove", event => { if(this.state==="gameplay")this.river?.pointerMove(this.worldPoint(event)); });
+    this.canvas.addEventListener("pointercancel", () => this.river?.cancelPointer());
   }
   bindMenu() {
     const on = (id, fn) => document.getElementById(id).addEventListener("click", fn);
     on("startBtn", () => this.startNew()); on("continueBtn", () => this.continueGame());
-    on("aboutBtn", () => this.ui.message("Hạt Muối Trường Kỳ · Phiêu lưu giải đố 6+. Vào vai Kiên trong hành trình đưa muối Văn Lý lên Việt Bắc. Bản hiện tại: Chương 1, màn 1–4. Cốt truyện và hội thoại chuyển thể theo GDD."));
+    on("chapter2Btn", () => this.startChapterTwo());on("nextChapterBtn", () => this.startChapterTwo());
+    on("riverActionBtn", () => this.river?.action());
+    on("aboutBtn", () => this.ui.message("Hạt Muối Trường Kỳ · Phiêu lưu giải đố 6+. Vào vai Kiên trong hành trình đưa muối Văn Lý lên Việt Bắc. Bản hiện tại: Chương 1 và 2, màn 1–7. Cốt truyện và hội thoại chuyển thể theo GDD."));
     on("resumeBtn", () => this.resume()); on("checkpointBtn", () => this.restartCheckpoint());
     on("exitBtn", () => this.returnToMenu()); on("nextBtn", () => this.nextLevel());
     on("replayBtn", () => this.startNew()); on("chapterMenuBtn", () => this.returnToMenu());
@@ -56,6 +60,12 @@ class ChapterGame {
   startNew() {
     this.save.clear(); this.inventory = []; this.flags = {}; this.completedLevels = [];
     this.loadLevel(1, false); this.startPrologue();
+  }
+  startChapterTwo() {
+    const data=this.state==="menu"?this.save.load():null;
+    if(data){this.inventory=[...data.inventory];this.flags={...data.flags};this.completedLevels=[...data.completedLevels];}
+    this.flags.prologue=true;this.give("compass");this.give("notebook");this.remove("bone");this.remove("mud");this.remove("leaves");
+    this.loadLevel(5);this.saveProgress();
   }
   startPrologue() {
     this.prologueRoom = true;
@@ -92,20 +102,22 @@ class ChapterGame {
     this.inventory = data.inventory; this.flags = data.flags; this.completedLevels = data.completedLevels;
     this.loadLevel(data.level, false);
     this.player.x = data.player.x; this.player.y = data.player.y;
-    if (this.flags.prologue && [1, 3].includes(this.level) && this.collision.blocks(this.player.getRect())) Object.assign(this.player, CHAPTER_ONE.levels[this.level].spawn);
+    if (this.flags.prologue && [1, 3, 5, 7].includes(this.level) && this.collision.blocks(this.player.getRect())) Object.assign(this.player, GAME_LEVELS[this.level].spawn);
     this.train = data.train; this.dock = new DockPuzzle(data.dock);
+    if(this.level>=5)this.river=new RiverChapter(this,data.river);
     if (this.level === 2) Object.assign(this.player, this.train.seated ? CHAPTER_ONE.trainLayout.seat : CHAPTER_ONE.trainLayout.standing);
     if (data.chapterComplete) this.finishChapter();
     else if (data.stageComplete) this.completeLevel();
     else if (!this.flags.prologue) this.startPrologue();
     else if (this.dock.solved() && this.level === 4) this.completeLevel();
     else if (this.flags.trainPassed && this.level === 2) this.completeLevel();
+    else if(this.level===5&&this.river.data.chainOpen || this.level===6&&this.river.data.storm.remaining===0&&this.river.data.storm.tied.every(Boolean) || this.level===7&&this.river.data.reeds.phase==="safe")this.completeLevel();
     else this.activateLevel();
   }
   loadLevel(level, intro = true) {
     this.prologueRoom = false; this.giftTween = null; this.trainPose = null; this.input.resetAnalog();
     this.level = level; this.stageComplete = false; this.chapterComplete = false;
-    const spec = CHAPTER_ONE.levels[level];
+    const spec = GAME_LEVELS[level];
     this.player = new Player(spec.spawn.x, spec.spawn.y);
     this.travel = []; this.pendingObject = null; this.selectedGold = null;
     this.train = {hidden: [], remaining: CHAPTER_ONE.levels[2].timeLimit, seated: false};
@@ -115,6 +127,9 @@ class ChapterGame {
     document.getElementById("journal").classList.add("d-none");
     document.getElementById("chapterEnd").classList.add("d-none");
     this.collision.setZones(spec.collisionZones || []);
+    this.river=level>=5?new RiverChapter(this):null;
+    this.riverScene=level>=5?new RiverScene(this):null;
+    if(level===7)this.give("bamboo");
     if (intro) this.say(spec.intro, () => this.activateLevel());
     else this.state = "gameplay";
     this.updateHUD();
@@ -137,9 +152,10 @@ class ChapterGame {
   give(item) { if (!this.has(item)) this.inventory.push(item); }
   remove(item) { this.inventory = this.inventory.filter(id => id !== item); }
   objects() {
+    if(this.river)return this.river.objects();
     if (this.prologueRoom) return [{id: "bac", npc: true, x: 365, y: 450,
       label: !this.has("compass") ? "Bác Hồ · Nhận la bàn" : !this.has("notebook") ? "Bác Hồ · Nhận sổ tay" : "Cảm ơn Bác · Lên đường"}];
-    return (CHAPTER_ONE.levels[this.level].objects || []).filter(o => {
+    return (GAME_LEVELS[this.level].objects || []).filter(o => {
       if (["disguise", "pass", "gold", "tools"].includes(o.id)) return !this.has(o.id) && !(o.id === "tools" && this.flags.cart);
       if (o.id === "bucket") return !this.has("bucket") && !this.has("water") && !this.flags.water;
       return true;
@@ -150,6 +166,7 @@ class ChapterGame {
   }
   interact(object) {
     if (this.state !== "gameplay" || !this.objects().some(o => o.id === object.id)) return;
+    if(this.river){this.river.interact(object);return;}
     if (this.prologueRoom) { this.receiveGift(); return; }
     this.player.startAction(object.npc ? "talk" : "pickup");
     if (this.level === 1) {
@@ -190,6 +207,7 @@ class ChapterGame {
   }
   notify(text) { this.ui.stepComplete(text); }
   objective() {
+    if(this.river)return this.river.objective();
     if (this.prologueRoom) return !this.has("compass") ? "Đến gần Bác Hồ, chọn tương tác để nhận la bàn." : !this.has("notebook") ? "Tương tác với Bác để nhận cuốn sổ tay." : "Đã nhận đủ hai món quà. Cảm ơn Bác trước khi lên đường.";
     if (this.level === 1) {
       const count = ["disguise", "pass", "gold"].filter(id => this.has(id)).length;
@@ -200,6 +218,7 @@ class ChapterGame {
     return `Đẩy muối vào khoang (${this.dock.goals.filter(g => this.dock.at(this.dock.boxes, g.x, g.y)).length}/3). ${this.dock.moves} bước · ${this.dock.crouched ? "Đang ngồi thấp" : "Chú ý đèn pha"}.`;
   }
   objectiveTarget() {
+    if(this.river){const objects=this.river.objects();return this.level===5&&this.river.data.distraction>0?objects.find(o=>o.id==="winch"):objects[0];}
     if (this.level === 1) return this.objects().find(o => o.id !== "departure") || this.objects()[0];
     if (this.level === 3) {
       const id = !this.flags.cart ? (this.has("tools") ? "cart" : "tools") : !this.flags.water ? (this.has("water") ? "villagers" : this.has("bucket") ? "well" : "bucket") : "agreement";
@@ -208,24 +227,29 @@ class ChapterGame {
     return null;
   }
   updateHUD() {
-    this.ui.setTimer(this.train.remaining, this.level === 2);
+    const riverTimer=this.level===6?this.river?.data.storm.remaining:this.level===7&&this.river?.data.reeds.phase==="materials"?this.river.data.reeds.remaining:null;
+    this.ui.setTimer(riverTimer??this.train.remaining, this.level===2||riverTimer!==null);
     const key = [this.level, this.state, !!this.prologueRoom, this.inventory.join(","), !!this.flags.cart, !!this.flags.water,
-      this.completedLevels.join(","), this.train.hidden.length, this.train.seated, this.dock.moves, this.dock.crouched].join("|");
+      this.completedLevels.join(","), this.train.hidden.length, this.train.seated, this.dock.moves, this.dock.crouched,this.river?.hudKey()].join("|");
     if (key === this.hudKey) return;
     this.hudKey = key;
-    const spec = CHAPTER_ONE.levels[this.level];
+    const spec = GAME_LEVELS[this.level];
     window.gameArt.setCostume([2, 3].includes(this.level) && this.has("disguise"));
     this.ui.setMission(this.prologueRoom ? "Mở đầu · Món quà của Bác" : `M${this.level} — ${spec.name}`, this.objective());
     this.ui.hud.classList.toggle("prologue-room", !!this.prologueRoom);
     this.ui.hud.classList.toggle("train-room", this.level === 2);
+    this.ui.hud.classList.toggle("river-room",this.level>=5);
     document.getElementById("freeControls").classList.toggle("d-none", ![1, 3].includes(this.level) || this.state !== "gameplay");
     document.getElementById("mapLevel").textContent = `M${this.level} · ${spec.place.toLocaleUpperCase("vi")}`;
-    document.getElementById("chapterProgress").textContent = `${spec.date} · Chương 1 · ${this.completedLevels.length}/4 màn`;
+    const chapter=this.level>=5?2:1,total=chapter===1?4:3,count=this.completedLevels.filter(n=>chapter===1?n<=4:n>=5).length;
+    document.getElementById("chapterProgress").textContent = `${spec.date} · Chương ${chapter} · ${count}/${total} màn`;
     document.getElementById("bagCount").textContent = this.inventory.length;
     document.getElementById("dockControls").classList.toggle("d-none", this.level !== 4 || this.state !== "gameplay");
     document.getElementById("crouchBtn").textContent = this.dock.crouched ? "C · Đứng lên" : "C · Ngồi thấp";
     document.getElementById("crouchBtn").setAttribute("aria-pressed", String(this.dock.crouched));
     document.getElementById("fieldHelp").textContent = this.level === 4 ? "Chạm ô kề Kiên hoặc dùng WASD / mũi tên để đẩy bao." : this.level === 2 ? "Chọn / kéo thỏi vàng vào thúng cam. Đưa giấy tờ từ ba lô." : "Kéo cần 360° hoặc chạm điểm đến. WASD / mũi tên · Shift chạy · E / Space tương tác.";
+    if(this.river)this.river.updateHUD();
+    else {document.getElementById("riverStatus").classList.add("d-none");document.getElementById("riverActions").classList.add("d-none");}
   }
   worldPoint(event) {
     const rect = this.canvas.getBoundingClientRect();
@@ -235,6 +259,7 @@ class ChapterGame {
   pointerDown(event) {
     if (this.state !== "gameplay") return;
     const p = this.worldPoint(event);
+    if(this.river?.pointerDown(p,event))return;
     if (this.level === 2) {
       const gold = this.scene.goldAt(p, this.train);
       if (gold !== null) { this.selectedGold = gold; this.canvas.setPointerCapture(event.pointerId); return; }
@@ -252,6 +277,7 @@ class ChapterGame {
     else this.walkTo(obj || p, obj);
   }
   pointerUp(event) {
+    if(this.state==="gameplay")this.river?.pointerUp(this.worldPoint(event));
     if (this.state === "gameplay" && this.level === 2 && this.selectedGold !== null && this.scene.inBasket(this.worldPoint(event))) this.hideGold();
   }
   hideGold() {
@@ -393,6 +419,7 @@ class ChapterGame {
       if (!this.train.remaining) { this.fail("Lính gác đã tới trước khi Kiên chuẩn bị xong. Thử lại: giấu vàng, ngồi yên rồi đưa giấy thông hành."); return; }
     }
     if (this.level === 4) this.updateDock(dt);
+    if(this.river)this.river.update(dt);
     this.saveClock += dt;
     if (this.saveClock >= 1) { this.saveClock = 0; this.saveProgress(); }
     this.updateHUD();
@@ -446,6 +473,7 @@ class ChapterGame {
   openJournal(title, content) {
     if (this.state !== "gameplay") return;
     this.state = "journal"; this.input.resetAnalog(); this.travel = []; this.pendingObject = null; this.ui.hidePrompt();
+    this.river?.cancelPointer();
     document.getElementById("journalTitle").textContent = title;
     document.getElementById("journal").dataset.view = content.classList.contains("hint-pages") ? "hint" : "bag";
     document.getElementById("journalContent").replaceChildren(content);
@@ -457,7 +485,7 @@ class ChapterGame {
     const body = document.createElement("div"), label = document.createElement("p"), hint = document.createElement("p");
     body.className = "hint-pages";
     label.className = "notebook-caption"; label.textContent = "Lời nhắc trong sổ Bác tặng";
-    hint.textContent = CHAPTER_ONE.levels[this.level].hint;
+    hint.textContent = GAME_LEVELS[this.level].hint;
     body.append(label, hint); this.openJournal("Sổ tay của Bác", body);
   }
   openBag() {
@@ -489,6 +517,7 @@ class ChapterGame {
   pause() {
     if (!["gameplay", "dialogue", "seating"].includes(this.state)) return;
     this.input.resetAnalog(); this.beforePause = this.state; this.state = "pause"; this.ui.showPause(); this.saveProgress(); this.updateHUD();
+    this.river?.cancelPointer();
   }
   resume() { if (this.state !== "pause") return; this.state = this.beforePause || "gameplay"; this.ui.hidePause(); this.updateHUD(); }
   restartCheckpoint() {
@@ -500,6 +529,7 @@ class ChapterGame {
       this.inventory = this.inventory.filter(id => !["tools", "bucket", "water"].includes(id));
       delete this.flags.cart; delete this.flags.water;
     }
+    if(level>=5){this.remove("bone");this.remove("mud");this.remove("leaves");}
     this.loadLevel(level); this.saveProgress();
   }
   fail(reason) {
@@ -510,16 +540,22 @@ class ChapterGame {
   completeLevel() {
     if (!this.completedLevels.includes(this.level)) this.completedLevels.push(this.level);
     this.stageComplete = true; this.state = "complete"; this.ui.hideDialogue(); this.ui.hidePrompt();
-    if (this.level === 4) { this.finishChapter(); return; }
+    if (this.level === 4 || this.level === 7) { this.finishChapter(); return; }
     document.getElementById("completeTitle").textContent = "Nhiệm vụ hoàn thành";
-    this.ui.showComplete(`Màn ${this.level}: ${CHAPTER_ONE.levels[this.level].name}. Tiến trình đã được ghi lại.`);
+    this.ui.showComplete(`Màn ${this.level}: ${GAME_LEVELS[this.level].name}. Tiến trình đã được ghi lại.`);
     document.getElementById("nextBtn").textContent = `Tiếp tục · Màn ${this.level + 1}`;
     this.updateHUD(); this.saveProgress();
   }
-  nextLevel() { if (this.state === "failed") this.restartCheckpoint(); else if (this.state === "complete" && this.level < 4) { this.loadLevel(this.level + 1); this.saveProgress(); } }
+  nextLevel() { if (this.state === "failed") this.restartCheckpoint(); else if (this.state === "complete" && this.level < 7) { this.loadLevel(this.level + 1); this.saveProgress(); } }
   finishChapter() {
     this.chapterComplete = true; this.state = "chapterEnd";
     this.ui.hideComplete(); this.ui.hideDialogue(); this.ui.hidePrompt();
+    const second=this.level>=5;
+    document.getElementById("chapterEndProgress").textContent=second?"ĐÃ HOÀN THÀNH 3 / 3 MÀN":"ĐÃ HOÀN THÀNH 4 / 4 MÀN";
+    document.getElementById("chapterEndTitle").textContent=`${second?CHAPTER_TWO.title:CHAPTER_ONE.title} đã hoàn thành!`;
+    document.getElementById("chapterEndSummary").textContent=second?"Kiên đã mở dây chắn, bảo vệ muối giữa bão và giấu thuyền trong bãi lau an toàn.":"Kiên đã chuẩn bị hành trang, qua trạm kiểm tra, giúp bà con Văn Lý và đưa muối xuống thuyền an toàn.";
+    document.getElementById("chapterEndNote").textContent=second?"Phía trước là Chương 3: Xuyên rừng mùa thu. Chương này chưa triển khai.":"Tiếp tục Chương 2: Ngược dòng mùa mưa bão, gồm màn 5–7.";
+    document.getElementById("nextChapterBtn").classList.toggle("d-none",second);
     document.getElementById("chapterEnd").classList.remove("d-none"); this.updateHUD(); this.saveProgress();
   }
   returnToMenu() {
@@ -532,6 +568,7 @@ class ChapterGame {
     const ok = this.save.save({version: 2, level: this.level, inventory: [...this.inventory], flags: {...this.flags},
       completedLevels: [...this.completedLevels], player: {x: this.player.x, y: this.player.y},
       train: {...this.train, hidden: [...this.train.hidden]}, dock: this.dock.snapshot(),
+      river:this.river?.snapshot()??null,
       stageComplete: !!this.stageComplete, chapterComplete: !!this.chapterComplete});
     document.getElementById("saveStatus").textContent = ok ? "Tự động lưu tiến trình" : "Trình duyệt không cho lưu · giữ trang để chơi tiếp";
   }

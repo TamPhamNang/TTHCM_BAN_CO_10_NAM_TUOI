@@ -27,7 +27,7 @@ with sync_playwright() as p:
           cases.forEach(([name,costume,state,direction,time],i) => {
             const x=i%3*320, y=Math.floor(i/3)*220;
             ctx.fillStyle='#1d3028';ctx.fillRect(x+8,y+8,304,204);
-            ctx.fillStyle='#eed8a7';ctx.font='16px system-ui';ctx.fillText(name,x+20,y+34);
+            ctx.fillStyle='#eed8a7';ctx.font='16px \"Times New Roman\"';ctx.fillText(name,x+20,y+34);
             ctx.strokeStyle='#8e8b64';ctx.beginPath();ctx.moveTo(x+28,y+188);ctx.lineTo(x+292,y+188);ctx.stroke();
             ctx.save();ctx.translate(x+160,y+160);ctx.scale(1.7,1.7);
             gameArt.setCostume(costume);

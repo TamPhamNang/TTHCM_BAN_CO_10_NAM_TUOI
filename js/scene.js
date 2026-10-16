@@ -136,7 +136,7 @@ class SceneRenderer {
     ctx.save(); ctx.strokeStyle = complete ? "#a5b790" : "#ecd08a"; ctx.fillStyle = complete ? "rgba(131,157,102,.16)" : "rgba(240,198,103,.12)";
     ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(x, y + 12, radius + pulse, (radius + pulse) * .4, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
     if (label) {
-      ctx.font = "600 11px system-ui"; ctx.textAlign = "center";
+      ctx.font = "600 11px \"Times New Roman\""; ctx.textAlign = "center";
       const w = ctx.measureText(label).width + 22;
       ctx.fillStyle = "rgba(22,36,27,.88)"; ctx.fillRect(x - w / 2, y - 77, w, 23);
       ctx.fillStyle = "#eee0b7"; ctx.fillText(label, x, y - 61);
@@ -167,7 +167,7 @@ class SceneRenderer {
       ctx.strokeStyle = "#a2ab7a"; ctx.lineWidth = 3; ctx.strokeRect(s.x, s.y, s.width, s.height);
       this.art.draw(ctx, "bao_tai", s.x + 36, s.y + 18, 72);
       this.art.draw(ctx, "bao_tai", s.x + 111, s.y + 18, 72);
-      ctx.font = "600 11px system-ui"; ctx.fillStyle = "#ede4c5"; ctx.textAlign = "center";
+      ctx.font = "600 11px \"Times New Roman\""; ctx.fillStyle = "#ede4c5"; ctx.textAlign = "center";
       ctx.fillText("HẦM TRÚ ẨN", s.x + s.width / 2, s.y + 51); ctx.textAlign = "left";
       m.points.forEach((p, i) => {
         this.marker(ctx, p.x, p.y, p.done ? "ĐÃ TIẾP TẾ" : `ĐIỂM ${i + 1}`, p.done, 25);
@@ -195,7 +195,7 @@ class SceneRenderer {
   }
 
   npcBadge(ctx, x, y, label) {
-    ctx.save(); ctx.font = "600 10px system-ui"; ctx.textAlign = "center";
+    ctx.save(); ctx.font = "600 10px \"Times New Roman\""; ctx.textAlign = "center";
     ctx.fillStyle = "#f2e4bc"; ctx.shadowColor = "#15251a"; ctx.shadowBlur = 4;
     ctx.fillText(label, x, y + 38); ctx.restore();
   }
@@ -204,7 +204,7 @@ class SceneRenderer {
     // The unit already has a painted sign; keep the area around its officer unobstructed.
     const labels = M2_MAP.buildings.filter(b => b.id !== "unit").map(b => [b.label, b.x, b.y + 22]);
     labels.push(["SÂN", 600, 455], ["CỔNG CHÍNH", 605, 520], ["CHÒI GÁC", 750, 480]);
-    ctx.save(); ctx.font = "600 10px system-ui"; ctx.textAlign = "center";
+    ctx.save(); ctx.font = "600 10px \"Times New Roman\""; ctx.textAlign = "center";
     labels.forEach(([text, x, y]) => {
       const width = ctx.measureText(text).width + 16;
       ctx.fillStyle = "rgba(29,44,30,.82)"; ctx.fillRect(x - width / 2, y - 13, width, 20);
