@@ -1,5 +1,15 @@
 # Bộ đồ họa
 
+## Chương 4 · Nước rút trên chiến khu
+
+Ảnh trong `assets/images/chapter_4/` được giữ nguyên. `CHAPTER_FOUR_ART` trong `js/levels/chapter4.js` khai báo ba nền, dao/dấu vết/la bàn, vật liệu/dụng cụ/sạp, dây leo, kho muối, ánh bình minh và vùng cắt nguyên vẹn trong bảng Kiên. Các ảnh có alpha được cắt trong bộ nhớ. `truyen_ket_chuong4.png` làm nền nhật ký số 4, chữ Times New Roman nằm trên vùng giấy trống. [Chi tiết](../docs/chapter4.md).
+
+Bộ bổ sung dùng trực tiếp trong gameplay: `chan_sap_tre.png` → `ghep_mat_tre.png` → `buoc_day_chac.png` → `lot_la_co.png`; giữ cả khung PNG để các bước không bị phóng/thu do cắt viền riêng. Rèm mới là `Rèm dây leo rừng nhiệt đới lộng lẫy.png`. Ảnh sạp thay cùng tên được tải lại bằng phiên bản 15; xe đạp thồ Chương 3 có người đẩy cũng dùng phiên bản 15.
+
+## Chương 3 · Xuyên rừng mùa thu
+
+Ảnh nguồn trong `assets/images/chapter_3/` được giữ nguyên. `CHAPTER_THREE_ART` trong `js/levels/chapter3.js` định nghĩa nền bến Tuyên Quang/đèo/trại đêm/đường rừng, ngựa/xe/quang gánh, cây, bộ bếp, cành lá và vùng cắt hai sheet nhân vật. Các PNG có alpha được cắt trực tiếp, giữ cạnh lá và hình gốc. Bảng UI chia muối là tham chiếu, chữ giao diện vẫn dùng HTML/Times New Roman. [Chi tiết Chương 3 và bản xem](../docs/chapter3.md).
+
 ## Bản đang chạy · Hạt Muối Trường Kỳ
 
 Game hiện nạp ảnh từ `assets/images/Chapter_1/` bằng `js/chapter-assets.js`:
@@ -20,6 +30,8 @@ Game cũng nạp cả 4 bảng tổng hợp: `Bảng tài sản Chương 1 Việ
 Ảnh nguồn được giữ nguyên. Cắt nền và sprite diễn ra trong bộ nhớ Canvas. Cảnh tàu, ruộng muối, bến thuyền được vẽ bằng `js/chapter-scene.js` và ghép nhân vật từ bộ ảnh này. Chạy qua HTTP theo README ở thư mục gốc.
 
 ## Chương 2 và chữ Times New Roman
+
+Sheet `prite_kien_hanh_dong_ven_song.png` cung cấp các tư thế đi thấp, ném xương, gỡ dây, trải/buộc bạt, chống sào và ngụy trang. `tram_gac_mo_xich_v1.png` là bản bổ sung để hiển thị mặt nước sau khi mở tời, dùng chung bố cục với ảnh gốc; [prompt và nguồn](../docs/chapter2-open-chain-asset.md). Không thay thế hoặc xuất đè các PNG nguồn.
 
 `js/levels/chapter2.js` khai báo ảnh nguồn trong `assets/images/Chapter_2/`: `tram_gac_ven_song.png`, `tran_cuong_phong.png`, `bai_lau_say.png`, xương, sào, bạt và sheet lính/chó. Hai bảng tổng hợp cung cấp thuyền, ca-nô, bùn, lá và bạt đã trải. Các vùng có nhãn/chữ mẫu được loại khỏi vùng cắt. Cảnh và cơ chế ở `js/river-scene.js`, `js/river-chapter.js`.
 

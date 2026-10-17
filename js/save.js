@@ -22,15 +22,17 @@ class SaveSystem {
   }
 
   valid(data) {
-    if (!data || data.version !== 2 || !Number.isInteger(data.level) || data.level < 1 || data.level > 7) return false;
+    if (!data || data.version !== 2 || !Number.isInteger(data.level) || data.level < 1 || data.level > 14) return false;
     if (typeof data.stageComplete !== "boolean" || typeof data.chapterComplete !== "boolean") return false;
     const point = p => p && Number.isFinite(p.x) && Number.isFinite(p.y);
     const cell = p => point(p) && Number.isInteger(p.x) && Number.isInteger(p.y) && p.x > 0 && p.x < 9 && p.y > 0 && p.y < 6;
     if (!point(data.player) || data.player.x < 0 || data.player.x > 1200 || data.player.y < 0 || data.player.y > 700) return false;
     if (!Array.isArray(data.inventory) || !data.inventory.every(id => Object.hasOwn(CHAPTER_ONE.items, id))) return false;
     if (!data.flags || typeof data.flags !== "object" || Array.isArray(data.flags)) return false;
-    if (!Array.isArray(data.completedLevels) || !data.completedLevels.every(n => Number.isInteger(n) && n >= 1 && n <= 7)) return false;
-    if (data.level >= 5 && !RiverChapter.valid(data.river)) return false;
+    if (!Array.isArray(data.completedLevels) || !data.completedLevels.every(n => Number.isInteger(n) && n >= 1 && n <= 14)) return false;
+    if (data.level >= 5 && data.level <= 7 && !RiverChapter.valid(data.river)) return false;
+    if (data.level >= 8 && data.level <= 11 && !ForestChapter.valid(data.forest)) return false;
+    if (data.level >= 12 && !CaveChapter.valid(data.cave)) return false;
     const t = data.train, d = data.dock;
     if (!t || !Array.isArray(t.hidden) || t.hidden.length > 3 || new Set(t.hidden).size !== t.hidden.length || !t.hidden.every(n => [0, 1, 2].includes(n)) || !Number.isFinite(t.remaining) || t.remaining < 0 || t.remaining > 45 || typeof t.seated !== "boolean") return false;
     if (t.seated && t.hidden.length !== 3) return false;

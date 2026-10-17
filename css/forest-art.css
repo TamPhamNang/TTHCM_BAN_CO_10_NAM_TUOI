@@ -1,0 +1,58 @@
+/* All new labels inherit the project's Times New Roman font. */
+.hud.forest-room .mini-map-panel { display: none; }
+.forest-actions { display: flex; flex-direction: column; align-items: end; gap: 8px; }
+.forest-rhythm { box-sizing: border-box; width: min(280px, calc(100vw - 24px)); padding: 12px; display: grid; gap: 8px; background: #1c3329f2; border: 1px solid #baa16a; border-radius: 5px; color: #f7e4b9; font-size: 15px; }
+.forest-rhythm-track { position: relative; height: 22px; border: 1px solid #a68b55; border-radius: 4px; overflow: hidden; background: #14251e; }
+.forest-rhythm-zone { position: absolute; left: 19.4444%; width: 69.4444%; top: 0; bottom: 0; background: #6e9455; border-left: 1px solid #c2d29b; border-right: 1px solid #c2d29b; }
+.forest-rhythm-cursor { position: absolute; left: var(--rhythm-position, 0%); top: 0; bottom: 0; width: 4px; transform: translateX(-50%); background: #fff0bc; box-shadow: 0 0 4px #000; }
+.forest-rhythm[data-ready="true"] { border-color: #bdcb8b; }
+.forest-rhythm[data-slipping="true"] .forest-rhythm-zone { background: #9e573b; }
+#forestRhythmText { font-size: 14px; line-height: 1.4; min-height: 1.4em; }
+.forest-allocation { position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); width: min(800px, calc(100vw - 32px)); padding: 12px; background: #1c3329f2; border: 2px solid #b79e68; border-radius: 5px; pointer-events: auto; box-shadow: 0 8px 24px #10251a88; }
+.forest-load-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+.forest-load-card { display: grid; grid-template-columns: 56px 1fr; align-items: center; gap: 4px 8px; padding: 8px; border: 1px solid #81906b; background: #344833; font-size: 13px; }
+.forest-load-card img { grid-row: span 2; width: 56px; height: 66px; object-fit: contain; }
+.forest-load-card strong { font-size: 12px; line-height: 1.4; }
+.forest-load-card > div { display: flex; align-items: center; justify-content: space-between; gap: 5px; grid-column: 1/-1; }
+.forest-load-card output { color: #ffe0a3; font-size: 20px; font-variant-numeric: tabular-nums; }
+.forest-load-card button { min-width: 38px; min-height: 38px; padding: 0 9px; font-size: 24px; line-height: 1; }
+.forest-allocation-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; }
+.forest-herb-choices { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+.forest-herb-choices button { display: grid; align-items: end; gap: 8px; padding: 12px; }
+.forest-herb-choices img { width: 100%; height: 120px; object-fit: contain; }
+.forest-herb-reference { display: block; width: 90px; height: 110px; object-fit: contain; margin: 0 auto 8px; }
+@media (max-width: 700px) {
+  .hud.forest-room .mission-panel { max-width: calc(100vw - 24px); }
+  .hud.forest-room .timer-panel { top: 240px; right: 12px; }
+  .forest-allocation { bottom: 100px; width: calc(100vw - 24px); padding: 8px; }
+  .forest-load-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
+  .forest-load-card { grid-template-columns: 40px 1fr; padding: 5px; }
+  .forest-load-card img { width: 40px; height: 42px; }
+  .forest-load-card strong { font-size: 11px; }
+  .forest-load-card > div { grid-column: 2; }
+  .forest-load-card button { min-width: 32px; min-height: 32px; font-size: 21px; }
+  .forest-load-card output { font-size: 17px; }
+  .forest-allocation-footer { font-size: 12px; }
+  .forest-allocation-footer .btn { padding: 7px 9px; font-size: 12px; }
+  .forest-actions .btn { font-size: 12px; padding: 8px 10px; }
+  .forest-herb-choices img { height: 80px; }
+  .forest-herb-choices button { padding: 7px; font-size: 12px; }
+}
+@media (max-height: 550px) {
+  .forest-rhythm { position: absolute; right: 156px; bottom: 0; width: min(260px, calc(100vw - 190px)); padding: 8px; font-size: 13px; }
+  .hud.forest-room .mission-panel { max-width: 46vw; }
+  .hud.forest-room .chapter-toolbar { top: 140px; }
+  .hud.forest-room .timer-panel { top: 92px; right: 208px; padding-top: 5px; padding-bottom: 5px; }
+  .hud.forest-room .timer-panel::before { top: 7px; }
+  .forest-allocation { left: 12px; bottom: 12px; transform: none; width: calc(100vw - 180px); padding: 7px; }
+  .forest-load-grid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 6px; }
+  .forest-load-card { grid-template-columns: 36px 1fr; gap: 3px; padding: 5px; }
+  .forest-load-card img { width: 36px; height: 35px; }
+  .forest-load-card strong { font-size: 10px; }
+  .forest-load-card > div { grid-column: 1/-1; }
+  .forest-load-card button { min-height: 30px; min-width: 30px; font-size: 20px; }
+  .forest-allocation-footer { margin-top: 5px; font-size: 12px; }
+  .forest-allocation-footer .btn { padding: 4px 10px; font-size: 12px; }
+  .forest-actions .btn { padding: 7px 9px; font-size: 11px; }
+  .forest-herb-reference { width: 70px; height: 70px; }
+}

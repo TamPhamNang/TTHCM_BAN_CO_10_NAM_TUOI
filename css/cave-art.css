@@ -1,0 +1,22 @@
+.hud.cave-room .mini-map-panel { display: none; }
+.cave-build { position: absolute; left: 24px; bottom: 170px; width: 265px; box-sizing: border-box; padding: 12px; color: #f3dfb3; background: #1c3329f5; border: 1px solid #b79e68; border-radius: 5px; pointer-events: auto; }
+.cave-build strong { display: block; margin-bottom: 8px; font-size: 16px; }
+.cave-build-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.cave-build .btn { padding: 10px 7px; min-height: 45px; font-size: 14px; }
+.cave-compass { text-align: center; }
+.cave-compass img { display: block; height: 150px; max-width: 100%; object-fit: contain; margin: 0 auto 12px; }
+.cave-compass-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media(max-width:700px){
+  .hud.cave-room .mission-panel { max-width: calc(100vw - 24px); }
+  .hud.cave-room .timer-panel { top: 246px; left: 12px; }
+  .cave-build { left: 12px; bottom: 176px; width: 250px; padding: 9px; }
+  .cave-build .btn { font-size: 13px; }
+}
+@media(max-height:550px){
+  .hud.cave-room .mission-panel { max-width: 46vw; }
+  .hud.cave-room .chapter-toolbar { top: 140px; }
+  .hud.cave-room .timer-panel { top: 106px; right: 208px; }
+  .cave-build { left: 12px; bottom: 16px; width: min(265px, calc(100vw - 195px)); padding: 8px; }
+  .cave-build strong { font-size: 14px; }
+  .cave-build .btn { font-size: 12px; min-height: 36px; padding: 6px; }
+}

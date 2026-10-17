@@ -4,7 +4,7 @@ class ChapterAssets extends GameAssets {
       "toa_tau_hoa", "lang_muoi", "ben_thuyen", "map_tro_truyen_dau_chuong", "xe_muoi_hong", "xo_nuoc", "ro_cam", "thoi_vang", "linh_canh", "nhan_vat_chinh_cai_trang", "kien_ngoi_toa_tau_v1",
       ...Object.values(CHAPTER_ATLAS.boards)];
     let done = 0;
-    const total = files.length + Object.keys(CHAPTER_TWO_ART.files).length + 3;
+    const total = files.length + Object.keys(CHAPTER_TWO_ART.files).length + Object.keys(CHAPTER_THREE_ART.files).length + Object.keys(CHAPTER_FOUR_ART.files).length + 3;
     const tick = () => onProgress(++done, total);
     await Promise.all(files.map(async name => {
       try {
@@ -53,6 +53,8 @@ class ChapterAssets extends GameAssets {
     }
     this.prepareAtlas();
     await this.prepareRiverArt(tick);
+    await this.prepareForestArt(tick);
+    await this.prepareCaveArt(tick);
     await this.prepareTypefaceArt(tick);
     if (this.images.kien_ngoi_toa_tau_v1) this.images.kienSeated = this.trim(this.crop(this.images.kien_ngoi_toa_tau_v1, null, 1024));
     if (this.images.map_tro_truyen_dau_chuong) {
@@ -101,6 +103,7 @@ class ChapterAssets extends GameAssets {
     for (const [id, region] of Object.entries(CHAPTER_TWO_ART.regions)) {
       if (this.images[region.source]) this.images[id] = this.extract(this.images[region.source], region.rect, region);
     }
+    if(this.images.riverGuard)this.riverGuardSprite=SpriteClips.register(this.images.riverGuard,this.images.riverGuard.height+6,95);
   }
   async prepareTypefaceArt(tick) {
     // Vector replacements have live Times New Roman text or deliberately blank
@@ -115,6 +118,56 @@ class ChapterAssets extends GameAssets {
         if (id.startsWith("ui")) document.documentElement.style.setProperty(`--art-${id}`, `url("${this.images[id].toDataURL()}")`);
       } catch { this.failed.push(filename); }
       tick();
+    }
+  }
+  async prepareForestArt(tick) {
+    await Promise.all(Object.entries(CHAPTER_THREE_ART.files).map(async([id,name])=>{
+      try{
+        this.images[id]=await new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=reject;image.src=`assets/images/chapter_3/${encodeURIComponent(name)}.png?v=${id==="forestBike"?15:10}`;});
+      }catch{this.failed.push(name);}tick();
+    }));
+    // These files already contain alpha. Crop directly to preserve fine leaf edges.
+    for(const [id,region] of Object.entries(CHAPTER_THREE_ART.regions))if(this.images[region.source]){
+      const frame=this.crop(this.images[region.source],region.rect,900);
+      if(region.outline){
+        // Trace the visible stones in the combined kit, excluding the wood/pot.
+        const ctx=frame.getContext("2d");ctx.globalCompositeOperation="destination-in";ctx.beginPath();
+        region.outline.forEach(([x,y],i)=>ctx[i?"lineTo":"moveTo"](x-region.rect[0],y-region.rect[1]));ctx.closePath();ctx.fill();ctx.globalCompositeOperation="source-over";
+      }
+      this.images[id]=this.trim(frame);
+    }
+    for(const id of ["forestHorse","forestBike","forestYoke","forestHerb","forestBranches"])if(this.images[id])this.images[id]=this.trim(this.crop(this.images[id],null,1100));
+    // A small code-native bowl icon distinguishes the serving from the large pot.
+    const bowl=document.createElement("canvas");bowl.width=96;bowl.height=80;
+    const bc=bowl.getContext("2d"),clay=bc.createLinearGradient(0,32,0,72);clay.addColorStop(0,"#dabd88");clay.addColorStop(1,"#8a6241");
+    bc.lineWidth=3;bc.strokeStyle="#49382b";bc.fillStyle=clay;bc.beginPath();bc.moveTo(13,36);bc.bezierCurveTo(16,75,80,75,83,36);bc.closePath();bc.fill();bc.stroke();
+    bc.fillStyle="#b2aa69";bc.beginPath();bc.ellipse(48,36,35,10,0,0,Math.PI*2);bc.fill();bc.stroke();
+    bc.strokeStyle="#eee0bfaa";bc.lineWidth=2;
+    for(const x of [35,49,63]){bc.beginPath();bc.moveTo(x,22);bc.bezierCurveTo(x-7,17,x+7,12,x,6);bc.stroke();}
+    this.images.forestMedicine=bowl;
+  }
+  async prepareCaveArt(tick) {
+    await Promise.all(Object.entries(CHAPTER_FOUR_ART.files).map(async([id,name])=>{
+      try { this.images[id]=await new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=`assets/images/chapter_4/${encodeURIComponent(name)}.png?v=${CHAPTER_FOUR_ART.revision}`;}); }
+      catch { this.failed.push(name); } tick();
+    }));
+    for(const [id,rect] of Object.entries(CHAPTER_FOUR_ART.regions))if(this.images.caveKien)this.images[id]=this.trim(this.crop(this.images.caveKien,rect,800));
+    for(const id of ["caveKnife","caveTracks","caveCompass","caveBamboo","cavePalm","caveTools","cavePlatform","caveStock"])if(this.images[id])this.images[id]=this.trim(this.crop(this.images[id],null,1100));
+    this.relayFrames={};
+    for(const [id,sheet] of Object.entries(CHAPTER_FOUR_ART.relaySheets)){
+      const source=this.images[id];if(!source)continue;
+      this.relayFrames[id]=[];
+      for(let row=0;row<sheet.rows.length-1;row++)for(let col=0;col<6;col++){
+        const frame=this.crop(source,[col*229,sheet.rows[row],229,sheet.rows[row+1]-sheet.rows[row]],400);
+        const fc=frame.getContext("2d",{willReadFrequently:true}),pixels=fc.getImageData(0,0,frame.width,frame.height).data;
+        let top=frame.height,bottom=0,sum=0,count=0;
+        for(let y=0;y<frame.height;y++)for(let x=0;x<frame.width;x++)if(pixels[(y*frame.width+x)*4+3]>100){top=Math.min(top,y);bottom=Math.max(bottom,y);}
+        // Register the head and feet; a bag extending sideways must not move the body.
+        for(let y=top;y<Math.min(bottom,top+22);y++)for(let x=0;x<frame.width;x++)if(pixels[(y*frame.width+x)*4+3]>100){sum+=x;count++;}
+        const canvas=document.createElement("canvas");canvas.width=400;canvas.height=300;
+        canvas.getContext("2d").drawImage(frame,200-(count?sum/count:114.5),280-bottom);
+        this.relayFrames[id].push(canvas);
+      }
     }
   }
   setCostume(disguised) { this.disguised = !!disguised; }

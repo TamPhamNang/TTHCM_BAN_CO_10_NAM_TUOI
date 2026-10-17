@@ -4,7 +4,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const ui = new UI();
   const save = new SaveSystem();
   const loading = document.getElementById("loadingStatus");
-  const buttons = [document.getElementById("startBtn"), document.getElementById("continueBtn"), document.getElementById("chapter2Btn")];
+  const buttons = ["startBtn","continueBtn","chapter2Btn","chapter3Btn","chapter4Btn"].map(id=>document.getElementById(id));
   buttons.forEach(button => button.disabled = true);
   window.gameArt = new ChapterAssets();
   try {
@@ -17,10 +17,14 @@ window.addEventListener("DOMContentLoaded", async () => {
     return;
   }
   const game = new ChapterGame(canvas, input, ui, save);
+  game.diaries = new ChapterDiaries(game);
+  document.getElementById("diaryArchiveBtn").disabled = false;
   game.camera.follow(game.player);
   game.startLoop();
   document.getElementById("startBtn").disabled = false;
   document.getElementById("chapter2Btn").disabled = false;
+  document.getElementById("chapter3Btn").disabled = false;
+  document.getElementById("chapter4Btn").disabled = false;
   game.refreshContinue();
   loading.textContent = window.gameArt.failed.length ? "Một số hình ảnh chưa tải được. Hãy tải lại trang." : "Sẵn sàng lên đường";
 

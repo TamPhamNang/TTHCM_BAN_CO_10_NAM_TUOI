@@ -27,9 +27,26 @@ Mở `http://localhost:8000`. Dùng HTTP để trình duyệt xử lý ảnh Can
 
 Sau màn tổng kết Chương 1, chọn **Tiếp tục · Chương 2**. Nút **Chơi Chương 2** trong menu cho phép vào thẳng màn 5; giữ danh sách màn đã hoàn thành và hành trang chung, bắt đầu lại tiến trình hiện tại của Chương 2. Nút **Tiếp tục** khôi phục đúng màn và giai đoạn đang chơi.
 
-Chương 3–5 (màn 8–15) chưa triển khai. Các thời lượng, chu kỳ đèn/gió và số bao đại diện là thông số gameplay, không mô phỏng số lượng toàn bộ chiến dịch. Hội thoại được rút gọn/chuyển thể từ GDD.
+## Chương 3 · Xuyên rừng mùa thu
+
+8. **Chia muối lên đường**: chuyển 9 bao đại diện cho ngựa (4), xe thồ (2), chú dân công (2) và chị dân công (1); lấy lại bao đã chia, kiểm tra rồi cho đoàn xuất phát.
+9. **Đẩy xe lên đèo**: nhấn E/Space hoặc nút Đẩy khi vạch ở vùng xanh rộng; vạch bắt đầu lại sau mỗi lần đẩy. Nhịp khoảng 0,5–1,5 giây đều qua được màn; nhấn muộn vẫn có lực. Xe trượt thì chạm đá sáng gần xe hoặc C để chèn trong 3 giây. Nhấn dồn không tăng tốc.
+10. **Đêm trong rừng vắng**: soi đèn tìm cây, đối chiếu hình lá trong sổ, lấy củi và đá đánh lửa, gõ ba nhịp nhóm bếp; đợi nấu xong rồi mang nước lá tới bác Hai. Theo bản kịch bản chi tiết của GDD, người cần chăm sóc là bác Hai dân công.
+11. **Bóng chim sắt**: E thổi còi; chạm nhóm hoặc Q để chọn, chạm gốc cây còn trống hoặc C để ra hiệu vào núp. Cả ba nhóm phải tới chỗ trong 5 giây. Chờ máy bay qua rồi ra hiệu đi tiếp; có hai lượt tuần tra.
+
+Chọn **Tiếp tục · Chương 3** sau màn tổng kết Chương 2, hoặc **Chơi Chương 3** ở menu. **Tiếp tục** khôi phục đúng màn, bao đã chia, xe/đá chèn, giai đoạn nấu nước lá và nhóm đang vào núp. Các thời lượng, chu kỳ đèn/gió và số bao đại diện là thông số gameplay, không mô phỏng số lượng toàn bộ chiến dịch. Hội thoại được rút gọn/chuyển thể từ GDD.
+
+## Chương 4 · Nước rút trên chiến khu
+
+12. **Dấu vết hang dơi**: Q/nút La bàn chọn hướng Đông Bắc, tìm dao, quan sát đàn kiến và dấu phân dơi, tới cửa hang phát quang ba lần.
+13. **Xây lán chống ẩm**: gom ba bó tre, dụng cụ, lá cọ; tới chỗ dựng sạp, chọn dựng chân → ghép mặt → buộc dây → lót lá. Không mất vật liệu khi chọn sai.
+14. **Cuộc đua với bình minh**: chủ động Bắt đầu, E/Space/nút chính đón rồi chuyền từng lượt năm bao; đủ 100 bao lên sạp trong 210 giây. Mỗi lượt kéo dài 7,4 giây, đồng bộ với năm bảng sprite mới. Không cần căn lực; có thể tạm dừng và tiếp tục giữa lượt đang chuyền.
+
+Chọn **Tiếp tục · Chương 4** sau nhật ký Chương 3 hoặc **Chơi Chương 4** trong menu. Tự lưu vật liệu, dấu vết, thao tác đang làm và thời gian bình minh. [Chi tiết Chương 4](docs/chapter4.md). Chương 5/màn 15 chưa triển khai.
 
 ## Điều khiển
+
+Cuối Chương 1–4, **nhật ký của Kiên** tự mở để kể lại hành trình bằng toàn bộ nội dung đã cung cấp. Dùng nút **Nhật ký hành trình** ở menu chính để đọc lại chương đã hoàn thành. Chữ dùng Times New Roman, đọc bằng cuộn/chạm hoặc bàn phím; thời gian nhiệm vụ dừng khi đọc. Đã lưu đủ năm trang, trang 5 chờ gameplay tương ứng. [Nội dung gốc](js/chapter-diaries-content.js), [tài liệu nhật ký](docs/chapter-diaries.md).
 
 - Chạm/nhấp đồ vật hoặc nhân vật: Kiên tự tìm đường và tương tác. Chạm nền để đi tới.
 - Kéo cần tròn 360° ở góc trái hoặc dùng cần analog tay cầm: đi theo góc và tốc độ kéo. Thả cần để dừng. Điểm đến bằng chuột giữ tọa độ tự do, đường đi vòng qua vật cản.
@@ -49,7 +66,10 @@ Tiến trình được lưu mỗi giây và sau các tương tác: vật phẩm,
 - `js/levels/chapter1.js`: cốt truyện, vật phẩm, cấu hình 4 màn, mô hình Sokoban.
 - `js/levels/chapter2.js`: nội dung màn 5–7, luồng nước, khoang hàng và vùng cắt tài sản Chương 2.
 - `js/river-chapter.js`, `js/river-scene.js`: trạng thái, lén lút, dây tời, bão, vẽ đường/ngụy trang và cảnh Chương 2.
-- `js/chapter-game.js`: luồng hai chương, nhiệm vụ, ba lô, tìm đường, lưu/phục hồi.
+- `js/levels/chapter3.js`: nội dung màn 8–11, sức chở, đường đèo, vị trí đá/chỗ núp và vùng cắt ảnh Chương 3.
+- `js/forest-chapter.js`, `js/forest-scene.js`: chia tải, nhịp đẩy, soi đèn/nhận dạng cây, nấu/chăm sóc, báo động/ẩn nấp và hoạt ảnh Chương 3.
+- `js/levels/chapter4.js`, `js/cave-chapter.js`, `js/cave-scene.js`: khảo sát hang, dựng sạp, chuyền đủ 100 bao, đồng hồ bình minh và hoạt ảnh Chương 4.
+- `js/chapter-game.js`: luồng bốn chương, nhiệm vụ, ba lô, tìm đường, lưu/phục hồi.
 - `js/chapter-assets.js`: nạp bộ ảnh hiện có trong `assets/images/Chapter_1/`, tách nhân vật và vật phẩm từ sheet trong bộ nhớ; giữ nguyên ảnh nguồn.
 - `js/animation.js`: tách từng hình nguyên vẹn theo vùng liên thông trong hàng, đăng ký điểm neo thân/chân, giữ tỷ lệ chung và lưu bitmap ở độ phân giải hiển thị.
 - `js/chapter-atlas.js`: tên 5 bảng tài sản và tọa độ cắt từng vùng; `css/chapter-art.css`: giao diện dùng khung giấy, biểu tượng và sổ tay từ bảng.
@@ -65,6 +85,10 @@ Giao diện HTML, nút và chữ Canvas dùng **Times New Roman**; CSS có Times
 
 ## Kiểm thử
 
+`python tests/chapter4_browser.py` và `python tests/chapter4_dynamics.py` kiểm tra ba màn Chương 4, thao tác thật, lưu/tải, nhật ký, bố cục nhỏ, dữ liệu sai và đồng hồ ở 24/30/60/144 lần cập nhật mỗi giây.
+
+`python tests/chapter_diaries_browser.py` kiểm tra nhật ký Chương 1–3, tải lại bản lưu cuối chương, đọc lại không sửa tiến trình, tải ảnh, cuộn bàn phím và bố cục điện thoại dọc/ngang.
+
 Khi máy chủ HTTP đang chạy, dùng `python tests/chapter1_browser.py` (cần Python Playwright và Chrome; có thể đặt `GAME_URL`, `CHROME_PATH`). Kiểm thử đi xuyên 4 màn, điều kiện vật phẩm, chọn/kéo vàng, tạm dừng/hết giờ, đưa sai giấy tờ, đèn quét, lùi bước, lưu/tải lại từng giai đoạn và bố cục màn hình nhỏ. Ảnh kiểm tra được ghi vào thư mục tạm của hệ điều hành.
 
 Kiểm tra đồ họa còn xác nhận đủ 5 bảng nguồn, các vùng atlas, sprite đi từ các bảng gốc lớn còn nguyên thân người và trang phục đúng theo màn. [Ghi chú đồ họa Chương 1](docs/chapter1-art.md) mô tả nguồn và cách sử dụng.
@@ -76,3 +100,7 @@ Kiểm tra đồ họa còn xác nhận đủ 5 bảng nguồn, các vùng atlas
 `python tests/capture_chapter1_animation.py` tạo [vòng xem hoạt ảnh](docs/chapter1-animation-preview.gif) bằng chính bộ vẽ runtime, để xem động thay vì chỉ kiểm tra ảnh tĩnh.
 
 `python tests/chapter2_browser.py` kiểm tra Times New Roman thực tế trên DOM/Canvas, ảnh giấy mới, chơi xuyên màn 5–7, phát hiện/đi thấp, câu đố dây, kéo/thả bạt, gió, thất bại/thử lại, đường đi sai/đúng, thu vật liệu/ngụy trang, tạm dừng, lưu/tải và bố cục dọc/ngang. Giữ tương thích bản lưu v2 Chương 1 không có trường `river`.
+
+`python tests/chapter2_dynamics.py` kiểm tra thời gian gió, thuyền và mở xích ở 30/60/144 lần cập nhật/giây, tốc độ chạy trên boong, thao tác bị tạm dừng, hủy kéo/đa điểm và dữ liệu lưu Chương 2. Xem [tiến độ đối chiếu commit 2d129d7](docs/resume-2d129d7.md) và [các hiệu ứng đã hoàn thiện](docs/chapter2.md).
+
+`python tests/chapter3_browser.py` chơi xuyên bốn màn, quá tải/hoàn trả, nhịp đẩy/chèn đá/thất bại, nhận dạng cây đúng/sai, nhóm bếp/nấu/chăm sóc, hai lượt máy bay, lưu/tải/tạm dừng và bố cục điện thoại dọc/ngang. `python tests/chapter3_dynamics.py` kiểm tra nhịp ở 30/60/144 lần cập nhật/giây, lệnh nấp sát hạn, dữ liệu lưu sai và phím E/C/con trỏ. [Tài liệu Chương 3](docs/chapter3.md), [ảnh tổng hợp](docs/chapter3-preview.jpg).

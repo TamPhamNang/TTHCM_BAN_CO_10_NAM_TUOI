@@ -39,6 +39,8 @@ class ChapterScene extends SceneRenderer {
     ctx.strokeStyle = stroke; ctx.lineWidth = 3; ctx.strokeRect(x, y, w, h);
   }
   render(ctx, game) {
+    if(game.cave){game.caveScene.render(ctx);return;}
+    if(game.forest){game.forestScene.render(ctx);return;}
     if(game.river){game.riverScene.render(ctx);return;}
     if (game.prologueRoom) { this.prologue(ctx, game); return; }
     if (game.level === 1) this.camp(ctx, game);
@@ -125,8 +127,10 @@ class ChapterScene extends SceneRenderer {
   objectAt(p, objects) {
     return objects.find(o => {
       if (!o.art) return Math.hypot(o.x - p.x, o.y - p.y) < 55;
-      const a = o.art, image = this.art.images[o.id], height = a.width * image.height / image.width * (a.squashY || 1);
-      return Math.abs(a.x - p.x) < Math.max(28, a.width / 2 + 12) && p.y > Math.min(a.bottom - height - 12, a.labelY - 20) && p.y < a.bottom + 12;
+      const a = o.art, image = this.art.images[a.id || o.id];
+      if (!image) return false;
+      const height = a.width * image.height / image.width * (a.squashY || 1);
+      return Math.abs(a.x - p.x) < Math.max(28, a.width / 2 + 12) && p.y > Math.min(a.bottom - height - 12, (a.labelY ?? a.bottom) - 20) && p.y < a.bottom + 12;
     });
   }
   seatedPassenger(ctx, id, {x, bottom, height, mirror = false}) {

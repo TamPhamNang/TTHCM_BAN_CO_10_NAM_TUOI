@@ -57,7 +57,7 @@ class UI {
   showDialogue(speaker, text) {
     document.getElementById("dialoguePortrait").classList.toggle("soldier-portrait", speaker !== "Cán bộ phụ trách");
     document.getElementById("dialoguePortrait").classList.toggle("bac-portrait", speaker === "Bác Hồ");
-    const portrait = speaker.includes("Bác Hồ") ? "bac" : speaker.includes("Nguyễn") ? "bang" : speaker.includes("Lính") ? "guard" : speaker.includes("diêm dân") ? (speaker.startsWith("Cô") ? "woman" : "farmer") : null;
+    const portrait = speaker.includes("Bác Hồ") ? "bac" : speaker.includes("Nguyễn") ? "bang" : speaker.includes("Lính") ? "guard" : speaker.includes("Bác Hai") ? "trainPassengerFarmer" : speaker.includes("diêm dân") ? (speaker.startsWith("Cô") ? "woman" : "farmer") : null;
     const art = portrait === "bac" ? window.gameArt?.images.portraitBac : portrait ? window.gameArt?.images[portrait] : window.gameArt?.playerPortrait?.();
     if (art) document.getElementById("dialoguePortrait").style.backgroundImage = `url("${art.toDataURL()}")`;
     this.speaker.textContent = speaker;
