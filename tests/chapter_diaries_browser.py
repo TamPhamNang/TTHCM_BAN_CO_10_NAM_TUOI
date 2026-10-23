@@ -4,6 +4,7 @@ import sys
 import tempfile
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from transition_helpers import advance_scene, settle_chapter
 
 sys.stdout.reconfigure(encoding="utf-8")
 with sync_playwright() as p:
@@ -18,7 +19,7 @@ with sync_playwright() as p:
     assert page.evaluate("CHAPTER_DIARIES[2].paragraphs[2].includes('bác Lương Bằng') && CHAPTER_DIARIES[4].date==='Đêm ngày 19 tháng 12 năm 1946.'")
     page.click("#diaryArchiveBtn")
     assert page.locator("#diaryArchiveEmpty").is_visible()
-    assert page.locator("#diaryArchiveNav button:disabled").count() == 4
+    assert page.locator("#diaryArchiveNav button:disabled").count() == 5
     assert page.evaluate("game.save.load()===null")
     page.keyboard.press("Escape")
     assert page.locator("#diaryArchive").is_hidden()
@@ -27,6 +28,7 @@ with sync_playwright() as p:
     for chapter, level in [(1, 4), (2, 7), (3, 11)]:
         # Use the actual completion handler at each chapter boundary.
         page.evaluate("""level=>{game.flags.prologue=true;game.loadLevel(level,false);game.completeLevel();}""", level)
+        settle_chapter(page)
         assert page.evaluate("game.state==='chapterEnd'")
         assert page.locator("#chapterDiaryContent h2").inner_text() == f"TRANG NHẬT KÝ SỐ {chapter}"
         assert page.evaluate("""chapter=>{
@@ -49,9 +51,9 @@ with sync_playwright() as p:
         page.click("#continueBtn")
         assert page.locator("#chapterDiaryContent h2").inner_text() == f"TRANG NHẬT KÝ SỐ {chapter}"
         assert page.evaluate("document.getElementById('chapterDiaryContent').scrollTop===0")
-        assert page.locator("#nextChapterBtn").is_visible()
+        assert page.locator("#nextChapterBtn").count()==0
         if chapter < 3:
-            page.click("#nextChapterBtn")
+            advance_scene(page)
             assert page.evaluate("game.level") == level + 1
             page.evaluate("game.returnToMenu()")
         else:
@@ -60,8 +62,8 @@ with sync_playwright() as p:
     # Read-only archive must not rewrite any saved gameplay or completion flags.
     before = page.evaluate("JSON.stringify({...localStorage})")
     page.click("#diaryArchiveBtn")
-    assert page.locator("#diaryArchiveNav button:disabled").count() == 1
-    assert page.locator("#diaryArchiveNav button").count() == 4
+    assert page.locator("#diaryArchiveNav button:disabled").count() == 2
+    assert page.locator("#diaryArchiveNav button").count() == 5
     for chapter in [3, 1, 2]:
         page.locator("#diaryArchiveNav button").nth(chapter-1).click()
         assert page.locator("#archiveDiaryContent h2").inner_text() == f"TRANG NHẬT KÝ SỐ {chapter}"
@@ -89,7 +91,7 @@ with sync_playwright() as p:
     # A legacy chapter-complete save may not have filled completedLevels.
     page.evaluate("game.completedLevels=[];game.saveProgress()")
     page.click("#diaryArchiveBtn")
-    assert page.locator("#diaryArchiveNav button:disabled").count() == 3
+    assert page.locator("#diaryArchiveNav button:disabled").count() == 4
     assert page.locator("#diaryArchiveNav button").nth(2).is_enabled()
     page.click("#closeDiaryArchiveBtn")
     # Storage failure still permits rereading progress in this session.

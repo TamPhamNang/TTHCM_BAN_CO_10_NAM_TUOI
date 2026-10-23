@@ -4,7 +4,7 @@ class ChapterAssets extends GameAssets {
       "toa_tau_hoa", "lang_muoi", "ben_thuyen", "map_tro_truyen_dau_chuong", "xe_muoi_hong", "xo_nuoc", "ro_cam", "thoi_vang", "linh_canh", "nhan_vat_chinh_cai_trang", "kien_ngoi_toa_tau_v1",
       ...Object.values(CHAPTER_ATLAS.boards)];
     let done = 0;
-    const total = files.length + Object.keys(CHAPTER_TWO_ART.files).length + Object.keys(CHAPTER_THREE_ART.files).length + Object.keys(CHAPTER_FOUR_ART.files).length + 3;
+    const total = files.length + Object.keys(CHAPTER_TWO_ART.files).length + Object.keys(CHAPTER_THREE_ART.files).length + Object.keys(CHAPTER_FOUR_ART.files).length + Object.keys(CHAPTER_FIVE_ART.files).length + 3;
     const tick = () => onProgress(++done, total);
     await Promise.all(files.map(async name => {
       try {
@@ -55,6 +55,7 @@ class ChapterAssets extends GameAssets {
     await this.prepareRiverArt(tick);
     await this.prepareForestArt(tick);
     await this.prepareCaveArt(tick);
+    await this.prepareSupperArt(tick);
     await this.prepareTypefaceArt(tick);
     if (this.images.kien_ngoi_toa_tau_v1) this.images.kienSeated = this.trim(this.crop(this.images.kien_ngoi_toa_tau_v1, null, 1024));
     if (this.images.map_tro_truyen_dau_chuong) {
@@ -167,6 +168,23 @@ class ChapterAssets extends GameAssets {
         const canvas=document.createElement("canvas");canvas.width=400;canvas.height=300;
         canvas.getContext("2d").drawImage(frame,200-(count?sum/count:114.5),280-bottom);
         this.relayFrames[id].push(canvas);
+      }
+    }
+  }
+  async prepareSupperArt(tick){
+    await Promise.all(Object.entries(CHAPTER_FIVE_ART.files).map(async([id,name])=>{
+      try{this.images[id]=await new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=CHAPTER_FIVE_ART.folder+"chuong_5_man_15_"+name+".png?v=17";});}
+      catch{this.failed.push(name);}tick();
+    }));
+    for(const id of ["supperPot","supperSalt","supperSpoon","supperIngredients"])if(this.images[id])this.images[id]=this.trim(this.crop(this.images[id],null,1254));
+    this.supperFrames={};
+    for(const [id,spec] of Object.entries(CHAPTER_FIVE_ART.sheets)){
+      this.supperFrames[id]=[];if(!this.images[id])continue;
+      for(let row=0;row<4;row++)for(let col=0;col<6;col++){
+        const frame=document.createElement("canvas");frame.width=260;frame.height=320;
+        const w=spec.xs[col+1]-spec.xs[col],h=spec.ys[row+1]-spec.ys[row];
+        frame.getContext("2d").drawImage(this.images[id],spec.xs[col],spec.ys[row],w,h,(260-w)/2,320-h,w,h);
+        this.supperFrames[id].push(frame);
       }
     }
   }

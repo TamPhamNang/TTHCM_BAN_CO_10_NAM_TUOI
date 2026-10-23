@@ -1,6 +1,6 @@
 # Chương 4 · Nước rút trên chiến khu
 
-Triển khai ba màn 12–14 theo GDD, từ tháng 11 đến đầu tháng 12/1946. Vào từ nút Tiếp tục sau nhật ký Chương 3 hoặc **Chơi Chương 4** ở menu chính. Chương 5/màn 15 chưa triển khai.
+Triển khai ba màn 12–14 theo GDD, từ tháng 11 đến đầu tháng 12/1946. Vào từ nút Tiếp tục sau nhật ký Chương 3 hoặc **Chơi Chương 4** ở menu chính. Chương 5/màn 15 đã triển khai; đọc hết nhật ký Chương 4 để tự tiếp tục.
 
 | Màn | Gameplay | Hoạt ảnh và hình ảnh |
 | --- | --- | --- |

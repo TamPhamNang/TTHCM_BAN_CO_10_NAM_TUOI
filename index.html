@@ -3,16 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hạt Muối Trường Kỳ — Chương 1–4</title>
+  <title>Hạt Muối Trường Kỳ — Chương 1–5</title>
   <link rel="stylesheet" href="css/style.css?v=8">
   <link rel="stylesheet" href="css/chapter-art.css?v=8">
   <link rel="stylesheet" href="css/forest-art.css?v=13">
-  <link rel="stylesheet" href="css/chapter-diary.css?v=14">
+  <link rel="stylesheet" href="css/chapter-diary.css?v=17">
   <link rel="stylesheet" href="css/cave-art.css?v=16">
 </head>
 <body>
   <main id="game-shell">
     <canvas id="gameCanvas"></canvas>
+    <div id="sceneTransition" role="status" aria-live="polite" hidden></div>
     <div id="hud" class="hud">
       <div class="hud-top">
         <div class="hud-panel mission-panel">
@@ -105,7 +106,7 @@
       <div class="overlay-card">
         <h2 id="completeTitle">Nhiệm vụ hoàn thành</h2>
         <p id="completeText">Đã hoàn thành nhiệm vụ.</p>
-        <button id="nextBtn" class="btn btn-light">Màn tiếp theo</button>
+        <button id="nextBtn" class="btn btn-light">Chơi lại màn này</button>
       </div>
     </div>
 
@@ -126,7 +127,7 @@
         <article id="chapterDiaryContent" class="diary-story" tabindex="0"></article>
         <footer class="diary-footer">
           <p id="chapterEndNote">Phía trước là Chương 2: Ngược dòng mùa mưa bão.</p>
-          <div class="diary-actions"><button id="nextChapterBtn" class="btn">Tiếp tục · Chương 2</button><button id="chapterMenuBtn" class="btn">Về màn hình chính</button><button id="replayBtn" class="btn">Chơi lại Chương 1</button></div>
+          <div class="diary-actions"><button id="chapterMenuBtn" class="btn">Về màn hình chính</button><button id="replayBtn" class="btn">Chơi lại Chương 1</button></div>
         </footer>
       </div>
     </div>
@@ -147,7 +148,7 @@
         <div class="menu-emblem" aria-hidden="true">★</div>
         <div class="eyebrow">HÀNH TRÌNH 2 VẠN TẤN MUỐI</div>
         <h1>Hạt Muối<br>Trường Kỳ</h1>
-        <p class="menu-description">Cùng cậu lính trẻ Kiên khám phá, giải đố<br>và giữ trọn những hạt muối Văn Lý.<br><strong>Chương 1–4 · Hà Nội đến kho muối Việt Bắc</strong></p>
+        <p class="menu-description">Cùng cậu lính trẻ Kiên khám phá, giải đố<br>và giữ trọn những hạt muối Văn Lý.<br><strong>Chương 1–5 · Hà Nội đến bữa cơm chiến khu</strong></p>
         <div id="loadingStatus" class="loading-status" role="status">Đang tải bộ đồ họa…</div>
         <div class="d-grid gap-2 mt-4">
           <button id="startBtn" class="btn btn-light btn-lg">Bắt đầu</button>
@@ -155,6 +156,7 @@
           <button id="chapter2Btn" class="btn btn-outline-light">Chơi Chương 2 · Hành trình trên sông</button>
           <button id="chapter3Btn" class="btn btn-outline-light">Chơi Chương 3 · Xuyên rừng mùa thu</button>
           <button id="chapter4Btn" class="btn btn-outline-light">Chơi Chương 4 · Nước rút trên chiến khu</button>
+          <button id="chapter5Btn" class="btn btn-outline-light">Chơi Chương 5 · Bữa cơm có muối</button>
           <button id="diaryArchiveBtn" class="btn btn-outline-light" disabled>Nhật ký hành trình</button>
           <button id="aboutBtn" class="btn btn-outline-light">Giới thiệu</button>
         </div>
@@ -178,7 +180,7 @@
   <script src="js/assets.js"></script>
   <script src="js/animation.js?v=8"></script>
   <script src="js/chapter-atlas.js?v=8"></script>
-  <script src="js/chapter-assets.js?v=16"></script>
+  <script src="js/chapter-assets.js?v=17"></script>
   <script src="js/levels/level2.js"></script>
   <script src="js/scene.js"></script>
   <script src="js/input.js?v=8"></script>
@@ -187,21 +189,24 @@
   <script src="js/camera.js"></script>
   <script src="js/dialogue.js"></script>
   <script src="js/ui.js?v=10"></script>
-  <script src="js/save.js?v=14"></script>
+  <script src="js/save.js?v=17"></script>
   <script src="js/levels/chapter1.js?v=8"></script>
   <script src="js/levels/chapter2.js?v=13"></script>
   <script src="js/levels/chapter3.js?v=13"></script>
   <script src="js/levels/chapter4.js?v=16"></script>
-  <script src="js/chapter-scene.js?v=14"></script>
+  <script src="js/levels/chapter5.js?v=17"></script>
+  <script src="js/chapter-scene.js?v=17"></script>
   <script src="js/river-chapter.js?v=9"></script>
   <script src="js/river-scene.js?v=13"></script>
   <script src="js/forest-chapter.js?v=13"></script>
   <script src="js/forest-scene.js?v=13"></script>
   <script src="js/cave-chapter.js?v=16"></script>
   <script src="js/cave-scene.js?v=16"></script>
-  <script src="js/chapter-diaries-content.js?v=14"></script>
-  <script src="js/chapter-diaries.js?v=14"></script>
-  <script src="js/chapter-game.js?v=14"></script>
-  <script src="js/main.js?v=14"></script>
+  <script src="js/supper-chapter.js?v=17"></script>
+  <script src="js/supper-scene.js?v=17"></script>
+  <script src="js/chapter-diaries-content.js?v=17"></script>
+  <script src="js/chapter-diaries.js?v=17"></script>
+  <script src="js/chapter-game.js?v=17"></script>
+  <script src="js/main.js?v=17"></script>
 </body>
 </html>

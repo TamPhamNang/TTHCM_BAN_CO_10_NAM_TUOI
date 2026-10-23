@@ -39,6 +39,7 @@ class ChapterScene extends SceneRenderer {
     ctx.strokeStyle = stroke; ctx.lineWidth = 3; ctx.strokeRect(x, y, w, h);
   }
   render(ctx, game) {
+    if(game.supper){game.supperScene.render(ctx);return;}
     if(game.cave){game.caveScene.render(ctx);return;}
     if(game.forest){game.forestScene.render(ctx);return;}
     if(game.river){game.riverScene.render(ctx);return;}

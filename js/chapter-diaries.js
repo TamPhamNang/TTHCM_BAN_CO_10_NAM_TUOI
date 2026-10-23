@@ -48,7 +48,7 @@ class ChapterDiaries {
   }
   unlocked() {
     const data = this.game.save.load() || this.game;
-    return [4, 7, 11, 14].flatMap((last, index) =>
+    return [4, 7, 11, 14,15].flatMap((last, index) =>
       data.completedLevels.includes(last) || (data.chapterComplete && data.level === last) ? [index + 1] : []);
   }
   openArchive() {
@@ -59,7 +59,7 @@ class ChapterDiaries {
     const content = document.getElementById("archiveDiaryContent");
     content.hidden = !chapters.length;
     document.getElementById("diaryArchiveEmpty").hidden = !!chapters.length;
-    for (let chapter = 1; chapter <= 4; chapter++) {
+    for (let chapter = 1; chapter <= 5; chapter++) {
       const button = document.createElement("button");
       button.type = "button"; button.className = "btn diary-tab";
       button.textContent = `Chương ${chapter}${chapters.includes(chapter) ? "" : " · Chưa mở"}`;

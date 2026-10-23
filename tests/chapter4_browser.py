@@ -5,6 +5,7 @@ import sys
 import tempfile
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from transition_helpers import advance_scene, settle_chapter
 
 sys.stdout.reconfigure(encoding="utf-8")
 with sync_playwright() as p:
@@ -22,6 +23,7 @@ with sync_playwright() as p:
     def dialogue():
         for _ in range(10):
             if page.evaluate("game.state")!="dialogue":
+                settle_chapter(page)
                 page.evaluate("game.render()")
                 return
             page.click("#dialogueNextBtn")
@@ -46,7 +48,7 @@ with sync_playwright() as p:
     stop_loop()
     page.evaluate("game.flags.prologue=true;game.loadLevel(11,false);game.completedLevels=[8,9,10,11];game.finishChapter();const old=game.save.load();delete old.cave;game.save.save(old)")
     reload();assert page.evaluate("game.state==='chapterEnd'&&game.level===11")
-    page.click("#nextChapterBtn");dialogue()
+    advance_scene(page);dialogue()
     assert page.evaluate("game.level===12&&game.cave&&!game.forest&&game.has('compass')&&game.has('notebook')")
     object_click("caveEntrance");assert page.evaluate("game.cave.data.trail.phase==='search'"),"Cannot clear before survey"
     page.click("#cavePrimaryBtn");assert page.evaluate("game.state==='journal'")
@@ -64,8 +66,8 @@ with sync_playwright() as p:
     assert page.evaluate("game.cave.data.trail.cleared===1")
     for _ in range(2):page.click("#cavePrimaryBtn");page.evaluate("game.update(.7)")
     assert page.evaluate("game.cave.data.trail.phase==='open'&&!!game.save.load()")
-    dialogue();assert page.evaluate("game.state==='complete'&&game.completedLevels.includes(12)")
-    page.click("#nextBtn");dialogue();assert page.evaluate("game.level===13")
+    dialogue();assert page.evaluate("game.state==='transition'&&game.completedLevels.includes(12)")
+    advance_scene(page);dialogue();assert page.evaluate("game.level===13")
     object_click("caveBench");assert page.evaluate("game.cave.data.build.phase==='collect'")
     for item in ["caveBamboo0","caveBamboo1","caveBamboo2","caveTools","cavePalm"]:object_click(item)
     reload();assert page.evaluate("game.cave.data.build.bamboo.every(Boolean)&&game.has('caveTools')")
@@ -77,7 +79,7 @@ with sync_playwright() as p:
     for step in [1,2,3]:
         page.locator(f"[data-build='{step}']").click();snapshot(f"build-{step}");page.evaluate("game.update(.9)")
     assert page.evaluate("game.cave.data.build.phase==='ready'&&!!game.save.load()")
-    snapshot("platform");dialogue();page.click("#nextBtn");dialogue();assert page.evaluate("game.level===14")
+    snapshot("platform");dialogue();advance_scene(page);dialogue();assert page.evaluate("game.level===14")
     assert page.evaluate("(()=>{game.update(30);return game.cave.data.relay.remaining===CHAPTER_FOUR.relay.duration})()"),"No timer before Start"
     page.click("#cavePrimaryBtn");page.click("#cavePrimaryBtn");assert page.evaluate("game.cave.data.relay.held")
     page.click("#cavePrimaryBtn");page.evaluate("game.update(.3);game.saveProgress()")
@@ -87,7 +89,7 @@ with sync_playwright() as p:
     assert page.evaluate("game.cave.data.relay.delivered===5")
     page.evaluate("game.cave.data.relay.remaining=.01;game.update(.05)")
     assert page.evaluate("game.state==='failed'")
-    page.click("#nextBtn");dialogue()
+    advance_scene(page);dialogue()
     page.click("#cavePrimaryBtn")
     # Actual keyboard alternation; there is no small timing target to hit.
     for _ in range(20):
@@ -98,7 +100,7 @@ with sync_playwright() as p:
     assert page.evaluate("game.cave.data.relay.delivered===100&&game.cave.data.relay.phase==='done'&&!!game.save.load()")
     dialogue();assert page.evaluate("game.state==='chapterEnd'&&game.completedLevels.includes(14)")
     assert page.locator("#chapterDiaryContent h2").inner_text()=="TRANG NHẬT KÝ SỐ 4"
-    assert page.locator("#nextChapterBtn").is_hidden()
+    assert page.locator("#nextChapterBtn").count()==0
     assert page.evaluate("document.getElementById('chapterDiaryContent').textContent.includes(CHAPTER_DIARIES[3].paragraphs.at(-1))")
     snapshot("diary");reload();assert page.evaluate("game.state==='chapterEnd'&&game.level===14")
     page.click("#chapterMenuBtn");before=page.evaluate("JSON.stringify({...localStorage})")

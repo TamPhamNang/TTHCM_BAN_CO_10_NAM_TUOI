@@ -1,0 +1,99 @@
+{
+  "project": "Hạt Muối Trường Kỳ",
+  "chapter": 5,
+  "level": 15,
+  "package": "chuong_5_man_15_assets_moi_da_dat_ten",
+  "note": "Hai sprite sheet chưa được kiểm định ranh giới frame hoặc số frame. FPS là tốc độ playback, không phải số lượng frame. Các hình nền (background) có màu phủ toàn ảnh, vật phẩm có kênh alpha.",
+  "files": [
+    {
+      "filename": "chuong_5_man_15_background_lan_bep_chien_khu_duoi_trang.png",
+      "original_filename": "bếp_dã_chiến_dưới_trăng_rừng_núi.png",
+      "description": "Background lán bếp dã chiến dưới trăng",
+      "size_px": [
+        1672,
+        941
+      ],
+      "has_alpha": false
+    },
+    {
+      "filename": "chuong_5_man_15_background_bep_trai_chien_khu_am_ap.png",
+      "original_filename": "bếp_dã_chiến_ấm_áp_giữa_đêm_núi_rừng.png",
+      "description": "Background bếp trại ban đêm, ánh lửa ấm",
+      "size_px": [
+        1672,
+        941
+      ],
+      "has_alpha": false
+    },
+    {
+      "filename": "chuong_5_man_15_prop_noi_canh_ca_suoi_tren_bep_lua.png",
+      "original_filename": "nồi_súp_cá_bên_lửa_trại.png",
+      "description": "Nồi canh cá suối và bếp lửa, alpha",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "has_alpha": true
+    },
+    {
+      "filename": "chuong_5_man_15_item_bao_muoi_van_ly_mo_mieng.png",
+      "original_filename": "bao_muối_thô_tinh_thể_lấp_lánh.png",
+      "description": "Bao muối Văn Lý đã mở miệng, alpha",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "has_alpha": true
+    },
+    {
+      "filename": "chuong_5_man_15_item_muong_go_xuc_muoi_trang.png",
+      "original_filename": "muỗng_gỗ_đựng_muối_hạt.png",
+      "description": "Muỗng gỗ múc muối trắng, alpha",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "has_alpha": true
+    },
+    {
+      "filename": "chuong_5_man_15_item_gio_rau_rung_va_ca_suoi.png",
+      "original_filename": "giỏ_thảo_mộc_và_cá_suối_tươi.png",
+      "description": "Giỏ rau rừng và cá suối, alpha; một asset ghép",
+      "size_px": [
+        1254,
+        1254
+      ],
+      "has_alpha": true
+    },
+    {
+      "filename": "chuong_5_man_15_ui_bang_nhiem_vu_nau_canh.png",
+      "original_filename": "giao_diện_nhiệm_vụ_dã_chiến_ẩm_thực.png",
+      "description": "UI bảng nhiệm vụ nấu canh, alpha",
+      "size_px": [
+        1448,
+        1086
+      ],
+      "has_alpha": true
+    },
+    {
+      "filename": "chuong_5_man_15_fx_hoi_nuoc_boc_len_sprite_sheet.png",
+      "original_filename": "bảng_sprite_30_khung_hơi_nước_bốc_lên.png",
+      "description": "Sprite sheet hơi nước; số frame chưa chuẩn hóa; tốc độ phát trong engine có thể đặt 30fps",
+      "size_px": [
+        1448,
+        1086
+      ],
+      "has_alpha": true
+    },
+    {
+      "filename": "chuong_5_man_15_fx_hat_muoi_rac_vao_noi_sprite_sheet.png",
+      "original_filename": "bảng_sprite_hiệu_ứng_rắc_muối_sơn_tay.png",
+      "description": "Sprite sheet muối rắc; số frame chưa chuẩn hóa; tốc độ phát trong engine có thể đặt 30fps",
+      "size_px": [
+        1448,
+        1086
+      ],
+      "has_alpha": true
+    }
+  ]
+}

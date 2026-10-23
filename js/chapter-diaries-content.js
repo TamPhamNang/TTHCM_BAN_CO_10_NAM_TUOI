@@ -50,6 +50,7 @@ const CHAPTER_DIARIES = [
     ]
   },
   {
+    image:"assets/images/chapter_5/chuyen_ket_chuong5.png",
     chapter: 5, title: "TRANG NHẬT KÝ SỐ 5",
     date: "Đêm ngày 19 tháng 12 năm 1946.",
     place: "Lán trại quân nuôi, dưới ánh lửa hồng.",

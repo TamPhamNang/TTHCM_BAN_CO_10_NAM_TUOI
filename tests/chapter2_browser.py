@@ -5,6 +5,7 @@ import sys
 import tempfile
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from transition_helpers import advance_scene, settle_chapter
 
 sys.stdout.reconfigure(encoding="utf-8")
 with sync_playwright() as p:
@@ -22,7 +23,9 @@ with sync_playwright() as p:
 
     def dialogue():
         for _ in range(12):
-            if page.evaluate("game.state")!="dialogue":return
+            if page.evaluate("game.state")!="dialogue":
+                settle_chapter(page)
+                return
             page.click("#dialogueNextBtn")
         raise AssertionError("Dialogue stuck")
 
@@ -66,7 +69,7 @@ with sync_playwright() as p:
       return {loud,quiet,failed:game.state==='failed'};
     }""")
     assert detection["loud"]>detection["quiet"]>0 and detection["failed"],detection
-    page.click("#nextBtn");dialogue()
+    advance_scene(page);dialogue()
     page.evaluate("game.interact(game.objects().find(o=>o.id==='winch'))")
     assert page.evaluate("game.state==='gameplay' && !game.river.data.chainOpen")
     object_click("bone")
@@ -94,11 +97,11 @@ with sync_playwright() as p:
     page.click("#resumeBtn")
     page.evaluate("()=>{for(let i=0;i<180&&game.state==='gameplay';i++)game.update(.025)}")
     screenshot("open-chain")
-    dialogue();assert page.evaluate("game.state==='complete' && game.completedLevels.includes(5)")
-    page.click("#nextBtn");dialogue();assert page.evaluate("game.level===6")
+    dialogue();assert page.evaluate("game.state==='transition' && game.completedLevels.includes(5)")
+    advance_scene(page);dialogue();assert page.evaluate("game.level===6")
     page.evaluate("game.river.data.storm.integrity=.01;game.update(.05)")
     assert page.evaluate("game.state==='failed'")
-    page.click("#nextBtn");dialogue()
+    advance_scene(page);dialogue()
     assert page.evaluate("game.river.data.storm.integrity>98")
     cargo=page.evaluate("GAME_LEVELS[6].cargo")
     a=world(205,580);b=world(cargo[0]["x"],cargo[0]["y"])
@@ -125,8 +128,8 @@ with sync_playwright() as p:
         if(game.state==='gameplay')game.river.data.storm.tied.forEach((v,i)=>{if(!v)game.river.handleCargo(i);});
       }
     }""")
-    dialogue();assert page.evaluate("game.state==='complete' && game.completedLevels.includes(6)")
-    page.click("#nextBtn");dialogue();assert page.evaluate("game.level===7")
+    dialogue();assert page.evaluate("game.state==='transition' && game.completedLevels.includes(6)")
+    advance_scene(page);dialogue();assert page.evaluate("game.level===7")
     channel=page.evaluate("GAME_LEVELS[7].channel")
     a=world(channel[0]["x"],channel[0]["y"]);b=world(channel[-1]["x"],channel[-1]["y"])
     page.mouse.move(a["x"],a["y"]);page.mouse.down();page.mouse.move(b["x"],b["y"]);page.mouse.up()
@@ -155,8 +158,8 @@ with sync_playwright() as p:
     page.evaluate("()=>{for(let i=0;i<350&&game.state==='gameplay';i++)game.update(.025)}")
     dialogue();assert page.evaluate("game.state==='chapterEnd' && game.completedLevels.join(',')==='5,6,7'")
     reload_continue();assert page.evaluate("game.state==='chapterEnd' && game.level===7")
-    assert page.locator("#nextChapterBtn").is_visible()
-    assert "Chương 3" in page.locator("#nextChapterBtn").inner_text()
+    assert page.locator("#nextChapterBtn").count()==0
+    assert "nhật ký" in page.locator("#chapterEndNote").inner_text()
     assert page.evaluate("window.seenFonts.every(f=>f.includes('Times New Roman'))")
     # A v2 Chapter 1 save without a river field remains usable.
     page.evaluate("""()=>{
@@ -164,8 +167,8 @@ with sync_playwright() as p:
       const d=game.save.load();delete d.river;game.save.save(d);
     }""")
     reload_continue();assert page.evaluate("game.level===4 && game.state==='chapterEnd'")
-    assert page.locator("#nextChapterBtn").is_visible()
-    page.click("#nextChapterBtn");dialogue()
+    assert page.locator("#nextChapterBtn").count()==0
+    advance_scene(page);dialogue()
     for width,height in [(390,844),(844,390)]:
         page.set_viewport_size({"width":width,"height":height})
         screenshot(f"mobile-{width}")

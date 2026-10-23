@@ -5,6 +5,7 @@ import sys
 import tempfile
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from transition_helpers import advance_scene, settle_chapter
 
 sys.stdout.reconfigure(encoding="utf-8")
 with sync_playwright() as p:
@@ -19,7 +20,9 @@ with sync_playwright() as p:
 
     def dialogue():
         for _ in range(12):
-            if page.evaluate("game.state")!="dialogue":return
+            if page.evaluate("game.state")!="dialogue":
+                settle_chapter(page)
+                return
             page.click("#dialogueNextBtn")
         raise AssertionError("Dialogue stuck")
 
@@ -60,11 +63,11 @@ with sync_playwright() as p:
     assert page.evaluate("(()=>{const s=JSON.stringify(game.forest.data);game.update(2);return s===JSON.stringify(game.forest.data)})()")
     page.click("#resumeBtn")
     page.evaluate("()=>{for(let i=0;i<150&&game.state==='gameplay';i++)game.update(.025)}")
-    dialogue();assert page.evaluate("game.state==='complete' && game.completedLevels.includes(8)")
-    page.click("#nextBtn");dialogue();assert page.evaluate("game.level===9")
+    dialogue();assert page.evaluate("game.state==='transition' && game.completedLevels.includes(8)")
+    advance_scene(page);dialogue();assert page.evaluate("game.level===9")
     page.evaluate("game.update(8.6)")
     assert page.evaluate("game.state==='failed'"),"Missed stone causes a retry"
-    page.click("#nextBtn");dialogue()
+    advance_scene(page);dialogue()
     page.click("#forestPrimaryBtn")
     spam=page.evaluate("(()=>{const v=game.forest.data.hill.velocity;for(let i=0;i<40;i++)game.forest.push();return [v,game.forest.data.hill.velocity]})()")
     assert spam[0]==spam[1],spam
@@ -86,7 +89,7 @@ with sync_playwright() as p:
       return {state:game.state,data:game.forest.data.hill};
     }""")
     assert hill["state"]=="dialogue" and hill["data"]["phase"]=="crested",hill
-    dialogue();page.click("#nextBtn");dialogue();assert page.evaluate("game.level===10")
+    dialogue();advance_scene(page);dialogue();assert page.evaluate("game.level===10")
     assert page.evaluate("!game.objects().some(o=>o.id==='forestHerb')")
     page.click("#hintBtn")
     assert page.locator(".forest-herb-reference").is_visible()
@@ -117,11 +120,11 @@ with sync_playwright() as p:
     assert page.evaluate("game.forest.data.camp.phase==='serving'")
     page.evaluate("game.update(.4);game.saveProgress()")
     reload();assert page.evaluate("game.forest.data.camp.phase==='serving'")
-    page.evaluate("game.update(2)");dialogue();page.click("#nextBtn");dialogue()
+    page.evaluate("game.update(2)");dialogue();advance_scene(page);dialogue()
     assert page.evaluate("game.level===11")
     page.evaluate("game.update(4);game.update(5.1)")
     assert page.evaluate("game.state==='failed'"),"Failure when no alarm/cover orders"
-    page.click("#nextBtn");dialogue()
+    advance_scene(page);dialogue()
     for wave in [1,2]:
         page.evaluate("game.update(4)")
         assert page.evaluate("game.forest.data.air.phase==='alarm'")
@@ -145,13 +148,13 @@ with sync_playwright() as p:
     dialogue()
     assert page.evaluate("game.state==='chapterEnd' && game.completedLevels.join(',')==='8,9,10,11'")
     reload();assert page.evaluate("game.state==='chapterEnd' && game.level===11")
-    assert page.locator("#nextChapterBtn").is_visible()
+    assert page.locator("#nextChapterBtn").count()==0
     assert page.evaluate("window.seenFonts.every(f=>f.includes('Times New Roman'))")
     # Old saves do not require a new forest field; chapter 2 now leads into 3.
     page.evaluate("""()=>{game.loadLevel(7,false);game.completedLevels=[5,6,7];game.finishChapter();const d=game.save.load();delete d.forest;game.save.save(d);}""")
     reload();assert page.evaluate("game.state==='chapterEnd' && game.level===7")
-    assert page.locator("#nextChapterBtn").is_visible()
-    page.click("#nextChapterBtn");dialogue();assert page.evaluate("game.level===8")
+    assert page.locator("#nextChapterBtn").count()==0
+    advance_scene(page);dialogue();assert page.evaluate("game.level===8")
     for width,height in [(390,844),(844,390)]:
         page.set_viewport_size({"width":width,"height":height})
         snapshot(f"allocation-{width}")

@@ -1,6 +1,6 @@
 # Chương 3 · Xuyên rừng mùa thu
 
-Triển khai màn 8–11 theo phần kịch bản chi tiết trong GDD, tháng 8 đến cuối tháng 10/1946. Màn 7 có nút chuyển sang Chương 3; menu có lối vào trực tiếp. Chương 1–2 và tiến trình đang lưu được giữ lại. Sau nhật ký Chương 3 có nút tiếp tục [Chương 4](chapter4.md), màn 12–14. Chương 5 chưa có gameplay.
+Triển khai màn 8–11 theo phần kịch bản chi tiết trong GDD, tháng 8 đến cuối tháng 10/1946. Đọc hết nhật ký Màn 7 sẽ tự chuyển sang Chương 3; menu có lối vào trực tiếp. Chương 1–2 và tiến trình đang lưu được giữ lại. Đọc hết nhật ký Chương 3 sẽ tự sang [Chương 4](chapter4.md), màn 12–14. Chương 5 đã có gameplay màn 15.
 
 | Màn | Gameplay | Hoạt ảnh và hiệu ứng |
 | --- | --- | --- |
@@ -34,7 +34,7 @@ Màn 8: nút +/− và Kiểm tra · Lên đường. Màn 9: E/Space đẩy, C h
 - `python tests/chapter3_browser.py`: chơi qua bốn màn bằng UI và cập nhật thời gian thực, có nhánh sai/thất bại, tải lại giữa giai đoạn, tạm dừng và kiểm tra màn hình 390 × 844 / 844 × 390.
 - `python tests/chapter3_dynamics.py`: xe, trượt, xuất phát và báo động ở 30/60/144 lần cập nhật/giây; không nhận lệnh núp muộn; giữ trạng thái khi tạm dừng; dữ liệu lưu sai; phím và con trỏ.
 - `python tests/stage_6_7_9_fixes.py`: bạt Màn 6 thực sự phủ lên vùng hàng, lấy mẫu chống sào ở 24 FPS và đo nhịp trình duyệt, chơi qua Màn 9 với nhịp 0,55 / 1 / 1,5 giây, không cộng lực khi nhấn dồn, căn lực bám lần nhấn, nhấn muộn/tạm dừng/lưu game và thanh nhịp trên điện thoại.
-- Chạy lại ba bộ `chapter1_*` và hai bộ `chapter2_*` để kiểm tra hồi quy. Chương 2 hiện có nút chuyển Chương 3 thay cho thông báo chưa triển khai.
+- Chạy lại ba bộ `chapter1_*` và hai bộ `chapter2_*` để kiểm tra hồi quy. Chương 2 tự nối Chương 3 sau khi đọc hết nhật ký.
 - `python tests/capture_chapter3_preview.py --animate`: xuất [ảnh tổng hợp](chapter3-preview.jpg) và [hoạt ảnh từ bộ vẽ runtime](chapter3-animation-preview.webp). Bản xem hoạt ảnh 25 khung hình/giây; tốc độ game theo thời gian thực của trình duyệt.
 
 Kết quả tại môi trường Chrome cục bộ ngày 17/10/2026: cả **7 bộ kiểm thử** (3 Chương 1, 2 Chương 2, 2 Chương 3) đều **PASS**, không ghi nhận lỗi JavaScript. Đã xem ảnh màn chơi, phục vụ nước lá, bố cục dọc/ngang và khung hình trong bản xem hoạt ảnh. `git diff --check` đạt; các PNG nguồn Chương 1/3 và bản xem Chương 1 không thay đổi. Thay đổi Chương 2 đang có trước khi bắt đầu được giữ lại. HEAD vẫn ở `2d129d7`, chưa tạo commit mới.

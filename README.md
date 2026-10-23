@@ -1,4 +1,4 @@
-# Hạt Muối Trường Kỳ
+��# Hạt Muối Trường Kỳ
 
 Game web phiêu lưu giải đố 6+, chuyển thể theo [GDD.md](GDD.md). Người chơi vào vai Kiên, cậu lính trẻ trong đội công tác của đồng chí Nguyễn Lương Bằng.
 
@@ -25,7 +25,7 @@ Mở `http://localhost:8000`. Dùng HTTP để trình duyệt xử lý ảnh Can
 6. **Trận cuồng phong**: kéo/chọn bạt lá cọ che bốn khoang, buộc dây, sửa dây bị gió giật và giữ hàng khô trong 40 giây.
 7. **Bãi lau sậy ngụy trang**: vẽ đường theo luồng nước, dùng sào đưa thuyền vào bãi trú; lên bờ lấy bùn và lá để phủ thuyền, chờ ca-nô đi qua.
 
-Sau màn tổng kết Chương 1, chọn **Tiếp tục · Chương 2**. Nút **Chơi Chương 2** trong menu cho phép vào thẳng màn 5; giữ danh sách màn đã hoàn thành và hành trang chung, bắt đầu lại tiến trình hiện tại của Chương 2. Nút **Tiếp tục** khôi phục đúng màn và giai đoạn đang chơi.
+Sau Chương 1, đọc hết nhật ký để tự sang Chương 2. Nút **Chơi Chương 2** trong menu cho phép vào thẳng màn 5; giữ danh sách màn đã hoàn thành và hành trang chung, bắt đầu lại tiến trình hiện tại của Chương 2. Nút **Tiếp tục** khôi phục đúng màn và giai đoạn đang chơi.
 
 ## Chương 3 · Xuyên rừng mùa thu
 
@@ -34,7 +34,7 @@ Sau màn tổng kết Chương 1, chọn **Tiếp tục · Chương 2**. Nút **
 10. **Đêm trong rừng vắng**: soi đèn tìm cây, đối chiếu hình lá trong sổ, lấy củi và đá đánh lửa, gõ ba nhịp nhóm bếp; đợi nấu xong rồi mang nước lá tới bác Hai. Theo bản kịch bản chi tiết của GDD, người cần chăm sóc là bác Hai dân công.
 11. **Bóng chim sắt**: E thổi còi; chạm nhóm hoặc Q để chọn, chạm gốc cây còn trống hoặc C để ra hiệu vào núp. Cả ba nhóm phải tới chỗ trong 5 giây. Chờ máy bay qua rồi ra hiệu đi tiếp; có hai lượt tuần tra.
 
-Chọn **Tiếp tục · Chương 3** sau màn tổng kết Chương 2, hoặc **Chơi Chương 3** ở menu. **Tiếp tục** khôi phục đúng màn, bao đã chia, xe/đá chèn, giai đoạn nấu nước lá và nhóm đang vào núp. Các thời lượng, chu kỳ đèn/gió và số bao đại diện là thông số gameplay, không mô phỏng số lượng toàn bộ chiến dịch. Hội thoại được rút gọn/chuyển thể từ GDD.
+Đọc hết nhật ký Chương 2 để tự sang Chương 3, hoặc chọn **Chơi Chương 3** ở menu. **Tiếp tục** khôi phục đúng màn, bao đã chia, xe/đá chèn, giai đoạn nấu nước lá và nhóm đang vào núp. Các thời lượng, chu kỳ đèn/gió và số bao đại diện là thông số gameplay, không mô phỏng số lượng toàn bộ chiến dịch. Hội thoại được rút gọn/chuyển thể từ GDD.
 
 ## Chương 4 · Nước rút trên chiến khu
 
@@ -42,11 +42,19 @@ Chọn **Tiếp tục · Chương 3** sau màn tổng kết Chương 2, hoặc *
 13. **Xây lán chống ẩm**: gom ba bó tre, dụng cụ, lá cọ; tới chỗ dựng sạp, chọn dựng chân → ghép mặt → buộc dây → lót lá. Không mất vật liệu khi chọn sai.
 14. **Cuộc đua với bình minh**: chủ động Bắt đầu, E/Space/nút chính đón rồi chuyền từng lượt năm bao; đủ 100 bao lên sạp trong 210 giây. Mỗi lượt kéo dài 7,4 giây, đồng bộ với năm bảng sprite mới. Không cần căn lực; có thể tạm dừng và tiếp tục giữa lượt đang chuyền.
 
-Chọn **Tiếp tục · Chương 4** sau nhật ký Chương 3 hoặc **Chơi Chương 4** trong menu. Tự lưu vật liệu, dấu vết, thao tác đang làm và thời gian bình minh. [Chi tiết Chương 4](docs/chapter4.md). Chương 5/màn 15 chưa triển khai.
+Đọc hết nhật ký Chương 3 để tự sang Chương 4 hoặc chọn **Chơi Chương 4** trong menu. Tự lưu vật liệu, dấu vết, thao tác đang làm và thời gian bình minh. [Chi tiết Chương 4](docs/chapter4.md). Chương 5/màn 15 đã triển khai, nối tự động sau nhật ký Chương 4.
+
+## Chuyển màn tự động và Chương 5
+
+Hoàn thành màn sẽ nghỉ 300 ms rồi chuyển cảnh tối/sáng, mỗi chiều 350 ms. Không cần bấm nút qua màn. Tiến trình được lưu trước khi chuyển, tải lại vẫn tự tiếp tục. Thiết bị chọn giảm chuyển động dùng mờ nhanh 60 ms mỗi chiều.
+
+Cuối Chương 1–4 mở nhật ký như trước. Cuộn tới cuối trang và chờ 2,5 giây để tự sang chương tiếp; cuộn lên sẽ dừng đếm chờ. Nhật ký Chương 5 là điểm kết thúc và có thể mở lại từ menu.
+
+**Chương 5 · Bữa cơm có muối (màn 15)**: lấy giỏ rau rừng và cá suối anh nuôi đã chuẩn bị, cho vào nồi, nhặt muỗng gỗ, xúc muối Văn Lý, rắc vào canh, chờ canh chín rồi mời bộ đội dùng bữa. Đoạn kết có Bác Hồ tới thăm và trao huy hiệu Dũng sĩ Hậu cần. Có nút vào Chương 5 trực tiếp ở menu. Xem [chi tiết Chương 5](docs/chapter5.md).
 
 ## Điều khiển
 
-Cuối Chương 1–4, **nhật ký của Kiên** tự mở để kể lại hành trình bằng toàn bộ nội dung đã cung cấp. Dùng nút **Nhật ký hành trình** ở menu chính để đọc lại chương đã hoàn thành. Chữ dùng Times New Roman, đọc bằng cuộn/chạm hoặc bàn phím; thời gian nhiệm vụ dừng khi đọc. Đã lưu đủ năm trang, trang 5 chờ gameplay tương ứng. [Nội dung gốc](js/chapter-diaries-content.js), [tài liệu nhật ký](docs/chapter-diaries.md).
+Cuối Chương 1–5, **nhật ký của Kiên** tự mở để kể lại hành trình bằng toàn bộ nội dung đã cung cấp. Dùng nút **Nhật ký hành trình** ở menu chính để đọc lại chương đã hoàn thành. Chữ dùng Times New Roman, đọc bằng cuộn/chạm hoặc bàn phím; thời gian nhiệm vụ dừng khi đọc. Đã tích hợp đủ năm trang, gồm nhật ký kết thúc hành trình. [Nội dung gốc](js/chapter-diaries-content.js), [tài liệu nhật ký](docs/chapter-diaries.md).
 
 - Chạm/nhấp đồ vật hoặc nhân vật: Kiên tự tìm đường và tương tác. Chạm nền để đi tới.
 - Kéo cần tròn 360° ở góc trái hoặc dùng cần analog tay cầm: đi theo góc và tốc độ kéo. Thả cần để dừng. Điểm đến bằng chuột giữ tọa độ tự do, đường đi vòng qua vật cản.
@@ -69,7 +77,7 @@ Tiến trình được lưu mỗi giây và sau các tương tác: vật phẩm,
 - `js/levels/chapter3.js`: nội dung màn 8–11, sức chở, đường đèo, vị trí đá/chỗ núp và vùng cắt ảnh Chương 3.
 - `js/forest-chapter.js`, `js/forest-scene.js`: chia tải, nhịp đẩy, soi đèn/nhận dạng cây, nấu/chăm sóc, báo động/ẩn nấp và hoạt ảnh Chương 3.
 - `js/levels/chapter4.js`, `js/cave-chapter.js`, `js/cave-scene.js`: khảo sát hang, dựng sạp, chuyền đủ 100 bao, đồng hồ bình minh và hoạt ảnh Chương 4.
-- `js/chapter-game.js`: luồng bốn chương, nhiệm vụ, ba lô, tìm đường, lưu/phục hồi.
+- `js/chapter-game.js`: luồng năm chương, nhiệm vụ, ba lô, tìm đường, lưu/phục hồi.
 - `js/chapter-assets.js`: nạp bộ ảnh hiện có trong `assets/images/Chapter_1/`, tách nhân vật và vật phẩm từ sheet trong bộ nhớ; giữ nguyên ảnh nguồn.
 - `js/animation.js`: tách từng hình nguyên vẹn theo vùng liên thông trong hàng, đăng ký điểm neo thân/chân, giữ tỷ lệ chung và lưu bitmap ở độ phân giải hiển thị.
 - `js/chapter-atlas.js`: tên 5 bảng tài sản và tọa độ cắt từng vùng; `css/chapter-art.css`: giao diện dùng khung giấy, biểu tượng và sổ tay từ bảng.
@@ -104,3 +112,5 @@ Kiểm tra đồ họa còn xác nhận đủ 5 bảng nguồn, các vùng atlas
 `python tests/chapter2_dynamics.py` kiểm tra thời gian gió, thuyền và mở xích ở 30/60/144 lần cập nhật/giây, tốc độ chạy trên boong, thao tác bị tạm dừng, hủy kéo/đa điểm và dữ liệu lưu Chương 2. Xem [tiến độ đối chiếu commit 2d129d7](docs/resume-2d129d7.md) và [các hiệu ứng đã hoàn thiện](docs/chapter2.md).
 
 `python tests/chapter3_browser.py` chơi xuyên bốn màn, quá tải/hoàn trả, nhịp đẩy/chèn đá/thất bại, nhận dạng cây đúng/sai, nhóm bếp/nấu/chăm sóc, hai lượt máy bay, lưu/tải/tạm dừng và bố cục điện thoại dọc/ngang. `python tests/chapter3_dynamics.py` kiểm tra nhịp ở 30/60/144 lần cập nhật/giây, lệnh nấp sát hạn, dữ liệu lưu sai và phím E/C/con trỏ. [Tài liệu Chương 3](docs/chapter3.md), [ảnh tổng hợp](docs/chapter3-preview.jpg).
+
+Kiểm tra ngày 23/10/2026: 13 bộ kiểm thử đạt, gồm các bộ Chương 1–4, nhật ký, sửa màn 6/7/9 và `chapter5_browser.py`. Không ghi nhận lỗi JavaScript/HTTP trong bộ chơi xuyên Chương 5.

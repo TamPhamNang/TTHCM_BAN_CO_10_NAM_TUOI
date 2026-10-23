@@ -4,7 +4,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const ui = new UI();
   const save = new SaveSystem();
   const loading = document.getElementById("loadingStatus");
-  const buttons = ["startBtn","continueBtn","chapter2Btn","chapter3Btn","chapter4Btn"].map(id=>document.getElementById(id));
+  const buttons = ["startBtn","continueBtn","chapter2Btn","chapter3Btn","chapter4Btn","chapter5Btn"].map(id=>document.getElementById(id));
   buttons.forEach(button => button.disabled = true);
   window.gameArt = new ChapterAssets();
   try {
@@ -25,6 +25,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("chapter2Btn").disabled = false;
   document.getElementById("chapter3Btn").disabled = false;
   document.getElementById("chapter4Btn").disabled = false;
+  document.getElementById("chapter5Btn").disabled=false;
   game.refreshContinue();
   loading.textContent = window.gameArt.failed.length ? "Một số hình ảnh chưa tải được. Hãy tải lại trang." : "Sẵn sàng lên đường";
 

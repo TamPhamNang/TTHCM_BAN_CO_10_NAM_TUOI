@@ -9,6 +9,7 @@ from pathlib import Path
 import sys
 import tempfile
 from playwright.sync_api import sync_playwright
+from transition_helpers import advance_scene, settle_chapter
 
 sys.stdout.reconfigure(encoding="utf-8")
 URL = os.environ.get("GAME_URL", "http://127.0.0.1:8000/")
@@ -37,6 +38,7 @@ def run():
         def dialogue():
             for _ in range(15):
                 if page.evaluate("game.state") != "dialogue":
+                    settle_chapter(page)
                     return
                 page.click("#dialogueNextBtn")
             raise AssertionError("Dialogue did not finish")
@@ -113,10 +115,10 @@ def run():
         object_click("pass"); object_click("gold")
         page.click("#bagBtn"); screenshot("inventory"); page.click("#closeJournalBtn")
         object_click("departure"); dialogue()
-        assert page.evaluate("game.state") == "complete"
+        assert page.evaluate("game.state") == "transition"
         reload_continue()
-        assert page.evaluate("game.state") == "complete"
-        page.click("#nextBtn"); dialogue()
+        assert page.evaluate("game.state") == "transition"
+        advance_scene(page); dialogue()
         assert page.evaluate("game.level") == 2
         assert page.evaluate("gameArt.disguised && !!gameArt.disguiseFrames"), "Train scene uses the disguise sheet"
         # Time pauses in journal and pause menu.
@@ -128,7 +130,7 @@ def run():
         # Timeout is recoverable with a fresh timer.
         page.evaluate("game.train.remaining=.01;game.update(.05)")
         assert page.evaluate("game.state") == "failed"
-        page.click("#nextBtn"); dialogue()
+        advance_scene(page); dialogue()
         assert page.evaluate("game.train.remaining > 40")
         world_click(353, 572); world_click(937, 350)
         reload_continue()
@@ -150,8 +152,8 @@ def run():
         page.locator(".inventory-item").filter(has_text="La bàn").click()
         assert page.evaluate("game.state") == "journal"
         page.locator(".inventory-item").filter(has_text="Giấy thông hành").click(); dialogue()
-        assert page.evaluate("game.state") == "complete"
-        page.click("#nextBtn"); dialogue()
+        assert page.evaluate("game.state") == "transition"
+        advance_scene(page); dialogue()
         # Help tasks are gated by items, with progress retained across reloads.
         object_click("agreement"); dialogue()
         assert page.evaluate("game.state") == "gameplay"
@@ -166,7 +168,7 @@ def run():
         assert page.evaluate("game.flags.water && !game.has('water')")
         screenshot("salt")
         object_click("agreement"); dialogue()
-        page.click("#nextBtn"); dialogue()
+        advance_scene(page); dialogue()
         assert page.evaluate("game.level") == 4
         assert not page.evaluate("gameArt.disguised"), "Dock scene uses the soldier push/crouch poses"
         # Illegal movement, crouch, undo and beam detection.
@@ -176,7 +178,7 @@ def run():
         page.click("#crouchBtn")
         page.evaluate("game.dock.elapsed=2.2;game.updateDock(1.2)")
         assert page.evaluate("game.state") == "failed"
-        page.click("#nextBtn"); dialogue()
+        advance_scene(page); dialogue()
         page.evaluate("game.moveDock(1,0)")
         page.click("#undoBtn")
         assert page.evaluate("game.dock.moves===0 && game.dock.player.x===2")
