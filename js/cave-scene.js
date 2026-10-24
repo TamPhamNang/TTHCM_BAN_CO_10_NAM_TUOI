@@ -15,9 +15,9 @@ class CaveScene extends RiverScene {
     }
     if(drawPlayer)draws.push({y:g.player.y,draw:()=>{
       const t=g.cave.data.trail,b=g.cave.data.build,time=g.cave.data.time;
-      if(g.level===12&&t.phase==="clearing")this.pose(ctx,"caveKienCut",g.player.x,g.player.y,91,t.workLeft>0?Math.sin((.6-t.workLeft)/.6*Math.PI)*-.13:0);
-      else if(g.level===12&&t.compass&&!g.player.moving)this.pose(ctx,"caveKienCompass",g.player.x,g.player.y,90,Math.sin(time*1.4)*.008);
-      else if(g.level===13&&b.phase==="collect"&&b.bamboo.some(Boolean))this.pose(ctx,"caveKienCarry",g.player.x,g.player.y-(g.player.moving?Math.sin(time*9)*.7:0),87);
+      if(g.level===12&&t.phase==="clearing")this.pose(ctx,"caveKienCut",g.player.x,g.player.y,76,t.workLeft>0?Math.sin((.6-t.workLeft)/.6*Math.PI)*-.13:0);
+      else if(g.level===12&&t.compass&&!g.player.moving)this.pose(ctx,"caveKienCompass",g.player.x,g.player.y,76,Math.sin(time*1.4)*.008);
+      else if(g.level===13&&b.phase==="collect"&&b.bamboo.some(Boolean))this.pose(ctx,"caveKienCarry",g.player.x,g.player.y-(g.player.moving?Math.sin(time*9)*.7:0),76);
       else g.player.render(ctx);
     }});
     draws.sort((a,b)=>a.y-b.y).forEach(item=>item.draw());
@@ -57,7 +57,7 @@ class CaveScene extends RiverScene {
     this.items(ctx,b.phase!=="building");
     if(b.phase==="building"){
       const working=b.workLeft>0;
-      this.pose(ctx,"caveKienCarry",g.player.x,g.player.y,88,working?Math.sin(d.time*8)*.025:0);
+      this.pose(ctx,"caveKienCarry",g.player.x,g.player.y,76,working?Math.sin(d.time*8)*.025:0);
       if(working)for(let i=0;i<6;i++){ctx.fillStyle="#d7c48a99";ctx.beginPath();ctx.arc(790+i*10,440+Math.sin(d.time*9+i)*8,1.5,0,Math.PI*2);ctx.fill();}
       this.label(ctx,working?"Đang làm…":CHAPTER_FOUR.buildSteps[b.step]||"Sạp đã sẵn sàng",860,545,"#eed49a",13);
     }
@@ -78,6 +78,7 @@ class CaveScene extends RiverScene {
     return {id,frame,phase};
   }
   relayActor(ctx,id,frame,x,y,height){
+    height*=window.gameArt.actorLayout?.relay??1;
     const image=window.gameArt.relayFrames[id]?.[frame];if(!image)return;
     const scale=height/210;
     ctx.save();ctx.fillStyle="#10231b44";ctx.beginPath();ctx.ellipse(x,y+13,17,4,0,0,Math.PI*2);ctx.fill();
@@ -99,9 +100,9 @@ class CaveScene extends RiverScene {
     if(r.flight>0)for(let bag=0;bag<spec.batch;bag++)for(let i=0;i<people.length-1;i++){
       const start=bag*spec.cadence+i*spec.stationDelay+spec.releaseAt;
       const u=(elapsed-start)/spec.receiveAt;if(u<0||u>=1)continue;
-      const a=people[i],b=people[i+1],ay=a.y+14-(90-i*2)*.55,by=b.y+14-(88-i*2)*.55;
+      const a=people[i],b=people[i+1],scale=art.actorLayout?.relay??1,ay=a.y+14-(90-i*2)*scale*.55,by=b.y+14-(88-i*2)*scale*.55;
       // Sprite-held bags are already painted into the sheets. Only bridge the empty hands.
-      art.draw(ctx,"saltBag",a.x+24+(b.x-16-a.x-24)*u,ay+(by-ay)*u-Math.sin(u*Math.PI)*3,27);
+      art.draw(ctx,"saltBag",a.x+24*scale+(b.x-16*scale-a.x-24*scale)*u,ay+(by-ay)*u-Math.sin(u*Math.PI)*3,27*scale);
     }
     const settled=r.flight>0?Math.max(0,Math.min(spec.batch,Math.floor((elapsed-4*spec.stationDelay-spec.cycle)/spec.cadence)+1)):0;
     for(let i=0;i<Math.min(12,(r.delivered+settled)/5);i++)art.draw(ctx,"saltBag",1020+(i%4)*22,415-Math.floor(i/4)*14,27);

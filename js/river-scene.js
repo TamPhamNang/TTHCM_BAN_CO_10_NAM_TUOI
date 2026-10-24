@@ -13,6 +13,7 @@ class RiverScene {
   }
   label(ctx,text,x,y,color="#f2dfb4",size=13){this.game.scene.label(ctx,text,x,y,color,size);}
   pose(ctx,id,x,y,height,lean=0,opacity=1) {
+    height*=window.gameArt.actorLayout?.pose??1;
     const image=window.gameArt.images[id];if(!image)return;
     ctx.save();ctx.globalAlpha*=opacity;ctx.translate(x,y+14);ctx.rotate(lean);
     const width=height*image.width/image.height;
@@ -84,7 +85,11 @@ class RiverScene {
       ctx.save();ctx.fillStyle="#e0b86912";ctx.beginPath();ctx.moveTo(guard.x,guard.y-25);ctx.lineTo(535,380);ctx.lineTo(310,398);ctx.closePath();ctx.fill();ctx.restore();
     }
     const moving=lure>0&&lure<1;
-    if(art.riverGuardSprite)art.painter.gait(ctx,art.riverGuardSprite,guard.x,guard.y,d.time*1.5,moving?1:0,{mirror:d.distraction>3,side:true});
+    if(art.riverGuardSprite){
+      const scale=art.actorLayout?.npc??1;
+      ctx.save();ctx.translate(guard.x,guard.y+14);ctx.scale(scale,scale);ctx.translate(-guard.x,-guard.y-14);
+      art.painter.gait(ctx,art.riverGuardSprite,guard.x,guard.y,d.time*1.5,moving?1:0,{mirror:d.distraction>3,side:true});ctx.restore();
+    }
     else art.npc(ctx,"riverGuard",guard.x,guard.y,95);
     this.dog(ctx,dog.x,dog.y,d.time,moving,d.distraction<=3,lure===1);
     this.label(ctx,lure>0?"Đang kiểm tra bụi rậm":"Chó đang canh tời",dog.x,dog.y-58,"#efd19d",12);
@@ -160,10 +165,10 @@ class RiverScene {
     // Move the intact boat and full character together; never slice body parts.
     ctx.save();ctx.translate(r.boat.x,r.boat.y+30+bob);
     ctx.rotate(Math.sin(time*2)* (moving?.009:.004));
-    window.gameArt.draw(ctx,"riverBoat",0,0,100);
+    window.gameArt.draw(ctx,"riverBoat",0,0,120);
     if(moving){
       const stroke=time/1.6*Math.PI*2;
-      this.pose(ctx,"riverKienPole",0,-22,62,Math.sin(stroke)*.045);
+      this.pose(ctx,"riverKienPole",0,-22,54,Math.sin(stroke)*.045);
     }else if(r.phase==="route"){
       ctx.save();ctx.translate(0,-22);ctx.scale(.67,.67);window.gameArt.character(ctx,0,0,"idle","up",0);ctx.restore();
     }

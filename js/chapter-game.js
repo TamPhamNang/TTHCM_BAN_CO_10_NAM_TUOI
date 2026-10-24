@@ -12,6 +12,7 @@ class ChapterGame {
     this.completedLevels = []; this.lastTime = 0; this.saveClock = 0;
     this.travel = []; this.selectedGold = null; this.train = {hidden: [], remaining: 45, seated: false};
     this.dock = new DockPuzzle(); this.bindMenu(); this.resize();
+    this.mobile=new MobileControls(this);
     window.addEventListener("resize", () => this.resize());
     window.addEventListener("blur", () => { if (["gameplay", "seating"].includes(this.state)) this.pause(); });
     document.addEventListener("visibilitychange", () => { if (document.hidden && ["gameplay", "seating"].includes(this.state)) this.pause(); });
@@ -61,6 +62,7 @@ class ChapterGame {
     this.viewOffsetY = (h - 700 * this.viewScale) / 2;
     this.camera.resize(1200, 700); this.camera.follow(this.player);
     window.gameArt.warm(dpr * this.viewScale);
+    this.mobile?.resize();
   }
   refreshContinue() { document.getElementById("continueBtn").disabled = !this.save.load(); }
   startNew() {
@@ -97,6 +99,7 @@ class ChapterGame {
   chapterNumber(){return this.level===15?5:this.level>=12?4:this.level>=8?3:this.level>=5?2:1;}
   startPrologue() {
     this.prologueRoom = true;
+    window.gameArt.actorLayout=ACTOR_LAYOUTS.prologue;
     this.collision.setZones([{x: 0, y: 0, width: 1200, height: 340}, {x: 460, y: 340, width: 340, height: 145}]);
     if (!this.flags.giftVisit) { Object.assign(this.player, {x: 950, y: 520}); this.player.face(-1, 0); this.player.facingAngle = this.player.heading; }
     if (this.flags.giftVisit) this.activateGifts();
@@ -130,7 +133,7 @@ class ChapterGame {
     this.inventory = data.inventory; this.flags = data.flags; this.completedLevels = data.completedLevels;
     this.loadLevel(data.level, false);
     this.player.x = data.player.x; this.player.y = data.player.y;
-    if (this.flags.prologue && [1, 3, 5, 7, 10,12,13].includes(this.level) && this.collision.blocks(this.player.getRect())) Object.assign(this.player, GAME_LEVELS[this.level].spawn);
+    if (this.flags.prologue && [1, 3, 5, 7, 10,12,13,15].includes(this.level) && this.collision.blocks(this.player.getRect())) Object.assign(this.player, GAME_LEVELS[this.level].spawn);
     this.train = data.train; this.dock = new DockPuzzle(data.dock);
     if(this.level>=5&&this.level<=7)this.river=new RiverChapter(this,data.river);
     if(this.level>=8&&this.level<=11)this.forest=new ForestChapter(this,data.forest);
@@ -151,6 +154,7 @@ class ChapterGame {
     this.transition=null;this.diaryWait=0;this.clearTransition();
     this.prologueRoom = false; this.giftTween = null; this.trainPose = null; this.input.resetAnalog();
     this.level = level; this.stageComplete = false; this.chapterComplete = false;
+    window.gameArt.actorLayout=ACTOR_LAYOUTS[level];
     const spec = GAME_LEVELS[level];
     this.player = new Player(spec.spawn.x, spec.spawn.y);
     this.travel = []; this.pendingObject = null; this.selectedGold = null;
@@ -294,6 +298,7 @@ class ChapterGame {
     this.ui.hud.classList.toggle("river-room",this.level>=5&&this.level<=7);
     this.ui.hud.classList.toggle("forest-room",this.level>=8&&this.level<=11);
     this.ui.hud.classList.toggle("cave-room",this.level>=12&&this.level<=14);
+    this.ui.hud.classList.toggle("supper-room",this.level===15);
     document.getElementById("freeControls").classList.toggle("d-none", ![1, 3,15].includes(this.level) || this.state !== "gameplay");
     document.getElementById("mapLevel").textContent = `M${this.level} · ${spec.place.toLocaleUpperCase("vi")}`;
     const chapter=this.chapterNumber(),total=[0,4,3,4,3,1][chapter],count=this.completedLevels.filter(n=>n>=[0,1,5,8,12,15][chapter]&&n<=[0,4,7,11,14,15][chapter]).length;
@@ -316,6 +321,7 @@ class ChapterGame {
       y: (event.clientY - rect.top - this.viewOffsetY) / this.viewScale};
   }
   pointerDown(event) {
+    if(this.mobile?.blocked)return;
     if (this.state !== "gameplay") return;
     const p = this.worldPoint(event);
     if(this.forest?.pointerDown(p,event))return;
@@ -432,6 +438,7 @@ class ChapterGame {
     } else this.ui.hidePrompt();
   }
   update(dt) {
+    if(this.mobile?.blocked)return;
     if(this.transition){this.updateTransition(dt);return;}
     if(this.state==="chapterEnd"&&this.level<15){
       const el=document.getElementById("chapterDiaryContent");
@@ -685,6 +692,7 @@ class ChapterGame {
     this.scene.render(ctx, this); ctx.restore(); if (!this.prologueRoom) this.scene.miniMap(this);
     const hidden = (this.prologueRoom && this.state === "dialogue") || ["menu", "chapterEnd", "complete", "failed", "transition"].includes(this.state);
     if (this.ui.hud.classList.contains("d-none") !== hidden) this.ui.hud.classList.toggle("d-none", hidden);
+    this.mobile?.sync();
   }
   frame(timestamp) {
     const dt = Math.min((timestamp - this.lastTime) / 1000 || 0, .05);

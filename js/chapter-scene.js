@@ -29,6 +29,7 @@ class ChapterScene extends SceneRenderer {
     this.ambient.set(key, canvas); return canvas;
   }
   label(ctx, text, x, y, color = "#f2e3b8", size = 13) {
+    if(window.game?.mobile?.enabled)text=MobileControls.touchText(text);
     ctx.save(); ctx.font = `600 ${size}px \"Times New Roman\"`; ctx.textAlign = "center";
     const width = ctx.measureText(text).width + 20;
     ctx.fillStyle = "#182c24e8"; ctx.beginPath(); ctx.roundRect(x - width / 2, y - size - 4, width, size + 13, 4); ctx.fill();
@@ -127,6 +128,7 @@ class ChapterScene extends SceneRenderer {
   inBasket(p) { return this.contains(p, CHAPTER_ONE.trainLayout.basket.hit); }
   objectAt(p, objects) {
     return objects.find(o => {
+      if (o.hit && this.contains(p, o.hit)) return true;
       if (!o.art) return Math.hypot(o.x - p.x, o.y - p.y) < 55;
       const a = o.art, image = this.art.images[a.id || o.id];
       if (!image) return false;

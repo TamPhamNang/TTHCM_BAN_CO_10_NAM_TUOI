@@ -2,6 +2,7 @@ class Input {
   constructor() {
     this.keys = new Set();
     this.justPressed = new Set();
+    this.touchKeys = new Set();
     this.analog = {x: 0, y: 0};
     const stick = document.getElementById("moveStick"), knob = document.getElementById("moveKnob");
     if (stick) {
@@ -32,7 +33,7 @@ class Input {
       }
     });
 
-    window.addEventListener("blur", () => { this.keys.clear(); this.justPressed.clear(); this.resetAnalog(); });
+    window.addEventListener("blur", () => { this.keys.clear(); this.touchKeys.clear(); this.justPressed.clear(); this.resetAnalog(); });
 
     window.addEventListener("keyup", (e) => {
       this.keys.delete(e.key.toLowerCase());
@@ -40,7 +41,7 @@ class Input {
   }
 
   isDown(key) {
-    return this.keys.has(key.toLowerCase());
+    return this.keys.has(key.toLowerCase()) || this.touchKeys.has(key.toLowerCase());
   }
 
   resetAnalog() {

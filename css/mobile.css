@@ -1,0 +1,66 @@
+.rotate-device[hidden], .mobile-actions[hidden], .mobile-actions button[hidden] { display: none !important; }
+.rotate-device { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 28px; background: radial-gradient(ellipse at top, #354533, #14251f 75%); color: #f0dfb9; text-align: center; }
+.rotate-card { max-width: 420px; }
+.rotate-card h1 { font-size: 27px; line-height: 1.25; margin: 24px 0 16px; }
+.rotate-card p { font-size: 18px; line-height: 1.55; }
+.rotate-card small { display: block; margin-top: 28px; font-size: 14px; color: #c4b58f; }
+.rotate-phone { margin: auto; width: 100px; height: 58px; border: 3px solid #d5bc83; border-radius: 12px; box-shadow: inset 0 0 0 5px #21392e; font-size: 43px; line-height: 48px; }
+.mobile-actions { display: none; }
+.mobile-portrait #game-shell > :not(#rotateDevice) { visibility: hidden !important; }
+.mobile-portrait #game-shell { pointer-events: none; }
+.mobile-portrait #rotateDevice { pointer-events: auto; }
+/* Enforce the portrait gate before asset loading/JS initialization as well. */
+@media (max-width: 767px) and (orientation: portrait) {
+  #rotateDevice[hidden] { display: grid !important; }
+  #game-shell > :not(#rotateDevice) { visibility: hidden !important; }
+  #game-shell { pointer-events: none; }
+  #rotateDevice { pointer-events: auto; }
+}
+@media (orientation: landscape) {
+  .mobile-device { overscroll-behavior: none; }
+  .mobile-device .mobile-actions, .mobile-device .free-controls { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+  .mobile-device .hud { padding: 10px max(12px, env(safe-area-inset-left)); }
+  .mobile-device .hud .mini-map-panel, .mobile-device .controls-hint,
+  .mobile-device #interactBtn, .mobile-device #riverActions,
+  .mobile-device #forestPrimaryBtn, .mobile-device #forestSecondaryBtn,
+  .mobile-device #caveActions, .mobile-device .dock-actions,
+  .mobile-device #forestDepartBtn, .mobile-device .dialogue-next small { display: none !important; }
+  .mobile-device .desktop-shortcut { display: none; }
+  .mobile-device .hud .mission-panel { width: 370px; max-width: 44vw; min-height: 64px; padding: 9px 12px; }
+  .mobile-device .mission-icon { display: none; }
+  .mobile-device #missionName { font-size: 14px; }
+  .mobile-device #objective { font-size: 12px; line-height: 1.3; }
+  .mobile-device .chapter-toolbar, .mobile-device .hud .chapter-toolbar { top: max(10px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right)); bottom: auto; flex-direction: row; gap: 6px; }
+  .mobile-device .chapter-toolbar .btn { min-height: 44px; padding: 6px 10px; font-size: 12px; }
+  .mobile-device .chapter-toolbar .btn::before { width: 21px; height: 25px; }
+  .mobile-device .chapter-progress { display: none; }
+  .mobile-device .free-controls { left: max(16px, env(safe-area-inset-left)); bottom: max(18px, env(safe-area-inset-bottom)); }
+  .mobile-device .move-stick { width: 94px; height: 94px; background: #1b3028b8; }
+  .mobile-device .move-stick span { left: 26px; top: 26px; }
+  .mobile-device .mobile-actions { position: absolute; right: max(14px, env(safe-area-inset-right)); bottom: max(18px, env(safe-area-inset-bottom)); display: flex; align-items: end; gap: 8px; max-width: 65vw; pointer-events: auto; }
+  .mobile-device .mobile-actions .btn { min-height: 52px; max-width: 150px; padding: 10px 13px; font-size: 14px; line-height: 1.2; touch-action: none; border: 1px solid #b89c63; box-shadow: 0 3px 12px #0b1c1870; background: #263c2fee; color: #f1dfb7; }
+  .mobile-device .mobile-actions #mobilePrimary { min-width: 105px; background: #ddc48e; color: #26372a; font-weight: bold; }
+  .mobile-device .mobile-actions #mobileRun[aria-pressed="true"] { background: #a78b53; color: #17271e; }
+  .mobile-device .river-status { top: 94px; left: max(12px, env(safe-area-inset-left)); right: auto; width: 180px; padding: 7px 10px; gap: 4px; font-size: 12px; background: #192f26cc; }
+  .mobile-device .river-status span { font-size: 12px; }
+  .mobile-device .timer-panel { top: 65px; right: max(12px, env(safe-area-inset-right)); min-width: 100px; padding: 5px 8px 5px 40px; }
+  .mobile-device .timer-panel::before { top: 7px; height: 32px; }
+  .mobile-device #timer { font-size: 18px; }
+  .mobile-device .interaction-prompt { bottom: 15px; max-width: 38vw; padding: 7px 10px; font-size: 12px; }
+  .mobile-device .step-notice { bottom: 88px; max-width: 60vw; }
+  .mobile-device .dock-controls { left: max(14px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom)); transform: none; width: auto; }
+  .mobile-device .direction-pad { grid-template-columns: repeat(3,44px); gap: 4px; }
+  .mobile-device .direction-pad button { min-width: 44px; min-height: 44px; }
+  .mobile-device #forestActions { right: 14px; bottom: 85px; }
+  .mobile-device .forest-rhythm { width: 220px; }
+  .mobile-device .forest-rhythm { right: 0; bottom: 0; }
+  .mobile-device .forest-load-card button { min-height: 44px; min-width: 44px; }
+  .mobile-device .forest-allocation { bottom: 82px; width: calc(100vw - 28px); }
+  .mobile-device .forest-load-card > div { display: grid; grid-template-columns: 44px minmax(0,1fr) 44px; gap: 0; }
+  .mobile-device .forest-load-card output { font-size: 17px; text-align: center; }
+  .mobile-device .cave-build .btn { min-height: 44px; }
+  .mobile-device .hud .timer-panel { top: 65px; right: max(12px, env(safe-area-inset-right)); left: auto; }
+  .mobile-device .dialogue { bottom: 10px; max-height: calc(100dvh - 24px); overflow-y: auto; }
+  .mobile-device .dialogue-next { min-height: 44px; }
+  .mobile-device .btn, .mobile-device .cave-build-choices button { touch-action: manipulation; }
+}

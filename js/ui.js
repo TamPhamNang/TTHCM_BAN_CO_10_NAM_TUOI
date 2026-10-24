@@ -46,6 +46,7 @@ class UI {
   }
 
   showPrompt(text = "Space — Tương tác") {
+    if(document.documentElement.classList.contains("mobile-device"))text=text.replace(/^(?:E\s*\/\s*Space|Space)\s*—\s*/,"");
     if (this.prompt.textContent !== text) this.prompt.textContent = text;
     if (this.prompt.classList.contains("d-none")) this.prompt.classList.remove("d-none");
   }

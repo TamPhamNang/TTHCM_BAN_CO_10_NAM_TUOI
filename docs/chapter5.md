@@ -19,6 +19,12 @@ Giữ phiên bản/khóa lưu v2, bổ sung `supper` chỉ bắt buộc cho màn
 
 ## Kiểm tra
 
+Cập nhật bố cục 24/10/2026: giỏ và muỗng đặt trên bàn bếp, bao muối cạnh kho; dùng nồi có sẵn trong nền để tránh chồng hai bếp. UI dùng màu gỗ và ánh đèn dịu, ẩn bản đồ nhỏ, chỉ đánh dấu mục tiêu hiện tại. Giữ nguyên nền lán khi dùng bữa và phủ ánh sáng ấm để bố cục vật cản không đổi. Bếp, bàn, thùng, kho muối và các chồng củi có vùng va chạm theo chân vật thể; điểm đứng tương tác tách khỏi vị trí ảnh. Bản lưu cũ nằm trong vật cản được đưa về điểm xuất phát an toàn.
+
+`python tests/chapter5_layout.py` kiểm tra va chạm khi đi bằng bàn phím, bấm trực tiếp vào ảnh trên bàn, toàn bộ đường đi tới các trạm và khôi phục bản lưu cũ. Ảnh bố cục: `docs/chapter5-preview.png`.
+
+Tỉ lệ nhân vật M15: Kiên phóng 1,65 lần quanh chân; người lớn cao 143–160 px để cân với bàn bếp. Muỗng cầm rộng 19 px, neo ở đầu cán vào tay, đổi bên theo hướng và dao động nhẹ theo bước chân; bỏ muỗng lớn nổi riêng trên nồi. Huy hiệu đặt lại theo vị trí ngực mới.
+
 `python tests/chapter5_browser.py` kiểm tra thứ tự nhiệm vụ, tương tác bằng con trỏ và đường đi thực, tự chuyển mọi màn/chương, tải lại giữa chuyển cảnh/nấu/đoạn kết, tạm dừng, bản lưu sai/cũ, nhật ký số 5, kho đọc lại, bố cục 390×844 và 844×390, lỗi JavaScript/HTTP. Các bộ browser cũ dùng `tests/transition_helpers.py` để đi theo luồng tự chuyển mới.
 
 Kết quả ngày 23/10/2026: toàn bộ 13 bộ kiểm thử đạt. Đã xem ảnh màn chơi, đoạn kết và nhật ký trên máy tính/điện thoại. `git diff --check` đạt.

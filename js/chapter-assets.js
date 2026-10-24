@@ -202,10 +202,13 @@ class ChapterAssets extends GameAssets {
     const frames = locomotion ? (direction === "up" ? bank.back : direction === "down" ? bank.idle : bank.side) : bank[state] || bank.idle;
     const image = frames?.[phase === null ? 0 : Math.min(frames.length - 1, Math.floor(phase * frames.length))];
     if (!image?.sprite) return;
+    const scale=this.actorLayout?.player??1;
+    ctx.save();ctx.translate(x,y+14);ctx.scale(scale,scale);ctx.translate(-x,-y-14);
     ctx.save(); ctx.fillStyle = "#10231b40"; ctx.beginPath(); ctx.ellipse(x, y + 13, 17, 5, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
     const blend = motion?.blend ?? (moving ? 1 : 0), stride = time * 1.6;
     if (locomotion) this.painter.gait(ctx, image, x, y, stride, blend, {mirror: direction === "left", side: ["left", "right"].includes(direction), heading: motion?.heading, running: state === "run"});
     else this.painter.draw(ctx, image, x, y, {mirror: direction === "left", bob: moving ? Math.sin(stride * Math.PI * 4) * .35 : 0});
+    ctx.restore();
   }
   // Remove only the flat border-connected sheet backdrop; leave enclosed artwork intact.
   extract(image, rect = null, options = {}) {
@@ -245,11 +248,16 @@ class ChapterAssets extends GameAssets {
     ctx.putImageData(pixels, 0, 0); return options.trim === false ? canvas : this.trim(canvas);
   }
   npc(ctx, id, x, y, height = 80, time = 0) {
+    height*=this.actorLayout?.npc??1;
     const image = id === "guardWalk" && this.guardWalk?.length ? this.guardWalk[Math.floor(time * 12) % this.guardWalk.length] : this.images[id];
     if (!image) {
       ctx.fillStyle = "#cbb68a"; ctx.fillRect(x - 9, y - 35, 18, 45); return;
     }
-    if (image.sprite) { this.painter.draw(ctx, image, x, y, {mirror: id === "guardWalk"}); return; }
+    if (image.sprite) {
+      const natural=(image.sprite.bounds.height-6)*image.sprite.scale,scale=height/natural;
+      ctx.save();ctx.translate(x,y+14);ctx.scale(scale,scale);ctx.translate(-x,-y-14);
+      this.painter.draw(ctx, image, x, y, {mirror: id === "guardWalk"});ctx.restore();return;
+    }
     const width = height * image.width / image.height;
     ctx.save(); ctx.fillStyle = "#14241944"; ctx.beginPath(); ctx.ellipse(x, y + 12, height * .22, height * .065, 0, 0, Math.PI * 2); ctx.fill();
     ctx.translate(x, y + 14); if (id === "guardInspect") ctx.scale(-1, 1);

@@ -13,14 +13,16 @@ class SupperChapter {
   objective(){return {collect:"Lấy giỏ rau rừng và cá suối anh nuôi đã chuẩn bị.",prepare:"Mang nguyên liệu tới nồi canh.",scoop:"Nhặt muỗng gỗ rồi tới bao muối Văn Lý để xúc muối.",sprinkle:"Mang thìa muối tới nồi canh và rắc vào nồi.",cooking:"Canh đang chín. Hơi ấm lan khắp lán bếp…",serve:"Canh đã chín. Tới bàn ăn mời các chú bộ đội dùng bữa.",ending:"Bác Hồ tới thăm lán trại.",done:"Dũng sĩ Hậu cần · Hành trình đã hoàn thành!"}[this.data.phase];}
   objects(){
     const d=this.data;if(["ending","done"].includes(d.phase))return [];
+    const station=(id,x,y,label,art)=>({id,x,y,label,art,hit:{x:x-30,y:y-24,width:60,height:48}});
     return [
-      ...(!d.ingredients?[{id:"supperIngredients",x:265,y:510,label:"Lấy giỏ rau và cá",art:{id:"supperIngredients",x:265,bottom:510,width:125}}]:[]),
-      ...(!d.spoon?[{id:"supperSpoon",x:480,y:565,label:"Lấy muỗng gỗ",art:{id:"supperSpoon",x:480,bottom:565,width:73}}]:[]),
-      {id:"supperPot",x:705,y:535,label:d.phase==="prepare"?"Cho nguyên liệu vào nồi":d.phase==="sprinkle"?"Rắc muối vào canh":"Nồi canh trên bếp"},
-      {id:"supperSalt",x:930,y:550,label:"Xúc muối Văn Lý"},
+      ...(!d.ingredients?[station("supperIngredients",383,438,"Lấy giỏ rau và cá",SUPPER_LAYOUT.ingredients)]:[]),
+      ...(!d.spoon?[station("supperSpoon",477,438,"Lấy muỗng gỗ",SUPPER_LAYOUT.spoon)]:[]),
+      station("supperPot",235,438,d.phase==="prepare"?"Cho nguyên liệu vào nồi":d.phase==="sprinkle"?"Rắc muối vào canh":"Nồi canh trên bếp",SUPPER_LAYOUT.pot),
+      station("supperSalt",936,484,"Xúc muối Văn Lý",SUPPER_LAYOUT.salt),
       ...(d.phase==="serve"?[{id:"supperServe",x:440,y:465,label:"Mời các chú dùng bữa"}]:[])
     ];
   }
+
   interact(o){
     const g=this.game,d=this.data;
     if(o.id==="supperIngredients"){d.ingredients=true;d.phase="prepare";g.give(o.id);g.player.startAction("pickup");g.notify("Đã lấy giỏ rau và cá. Mang tới nồi canh nhé!");}

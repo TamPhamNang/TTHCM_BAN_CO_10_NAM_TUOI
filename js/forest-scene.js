@@ -17,7 +17,7 @@ class ForestScene extends RiverScene {
       return {y,draw:()=>{
         ctx.save();ctx.globalAlpha=1-travel*.45;
         const bob=travel>0?Math.sin(g.forest.data.time*9+i)*1.2:0;
-        const image=art.images[carrier.art],width=carrier.width*(1-travel*.22);
+        const image=art.images[carrier.art],width=carrier.width*(1-travel*.22)*(art.actorLayout?.group??1);
         if(image)ctx.drawImage(image,x-width/2,y-width*image.height/image.width+bob,width,width*image.height/image.width);
         ctx.restore();if(travel===0)this.label(ctx,`${carrier.name}: ${p.loads[i]}/${carrier.capacity}`,x,y+25,"#f6e3ae",13);
       }};
@@ -28,7 +28,7 @@ class ForestScene extends RiverScene {
   }
   cart(ctx,point) {
     const image=window.gameArt.images.forestPush;if(!image)return;
-    const d=this.game.forest.data,h=d.hill,w=image.width,height=image.height,scale=105/height,split=w*.4,hip=height*.73;
+    const d=this.game.forest.data,h=d.hill,w=image.width,height=image.height,scale=145/height,split=w*.4,hip=height*.73;
     const walking=h.velocity>.003&&!h.slipping,cycle=d.time*12;
     ctx.save();ctx.translate(point.x,point.y+12-(walking?Math.sin(cycle*2)*.6:0));ctx.rotate(Math.max(-.12,Math.min(.12,point.heading*.15)));
     if(Math.cos(point.heading)<0)ctx.scale(-1,1);ctx.scale(scale,scale);ctx.translate(-w/2,-height);
@@ -66,7 +66,7 @@ class ForestScene extends RiverScene {
       const t=Math.min(1,c.served/.9);draws.push({y:420,draw:()=>{
         const x=g.player.x+(335-g.player.x)*t,y=g.player.y+(412-g.player.y)*t,handoff=Math.max(0,(c.served-.9)/1.1);
         window.gameArt.character(ctx,x,y,t<1?"walk":"idle","left",c.served,false,null,{blend:t<1?1:0});
-        window.gameArt.draw(ctx,"forestMedicine",x-18+19*handoff,y-28-32*handoff,25);
+        window.gameArt.draw(ctx,"forestMedicine",x-28+29*handoff,y-49-32*handoff,25);
       }});
     }else draws.push({y:g.player.y,draw:()=>g.player.render(ctx)});
     draws.sort((a,b)=>a.y-b.y).forEach(d=>d.draw());
@@ -109,7 +109,7 @@ class ForestScene extends RiverScene {
     const groups=a.groups.map((group,i)=>({group,i,point:f.groupPoint(i)}));
     groups.sort((a,b)=>a.point.y-b.point.y).forEach(({group,i,point})=>{
       const specGroup=spec.groups[i],hidden=group.progress===1;
-      const width=specGroup.width*(hidden?.85:1),image=art.images[specGroup.art];
+      const width=specGroup.width*(hidden?.85:1)*(art.actorLayout?.group??1),image=art.images[specGroup.art];
       ctx.save();ctx.globalAlpha=hidden?.38:1;
       if(image)ctx.drawImage(image,point.x-width/2,point.y-width*image.height/image.width+(group.cover>=0&&!hidden?Math.sin(f.data.time*11+i):0),width,width*image.height/image.width);ctx.restore();
       if(hidden)art.draw(ctx,"forestBranches",point.x,point.y+10,90);

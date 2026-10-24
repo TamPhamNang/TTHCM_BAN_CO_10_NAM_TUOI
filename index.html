@@ -2,18 +2,27 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Hạt Muối Trường Kỳ — Chương 1–5</title>
   <link rel="stylesheet" href="css/style.css?v=8">
-  <link rel="stylesheet" href="css/chapter-art.css?v=8">
+  <link rel="stylesheet" href="css/chapter-art.css?v=18">
   <link rel="stylesheet" href="css/forest-art.css?v=13">
   <link rel="stylesheet" href="css/chapter-diary.css?v=17">
   <link rel="stylesheet" href="css/cave-art.css?v=16">
+  <link rel="stylesheet" href="css/mobile.css?v=22">
 </head>
 <body>
   <main id="game-shell">
     <canvas id="gameCanvas"></canvas>
     <div id="sceneTransition" role="status" aria-live="polite" hidden></div>
+    <section id="rotateDevice" class="rotate-device" role="dialog" aria-modal="true" aria-labelledby="rotateTitle" hidden>
+      <div class="rotate-card">
+        <div class="rotate-phone" aria-hidden="true">↻</div>
+        <h1 id="rotateTitle">Xoay ngang thiết bị để chơi</h1>
+        <p>Bạn cần xoay ngang điện thoại. Trò chơi chỉ mở khi màn hình nằm ngang.</p>
+        <small>Trò chơi đang dừng · Xoay ngang để tiếp tục</small>
+      </div>
+    </section>
     <div id="hud" class="hud">
       <div class="hud-top">
         <div class="hud-panel mission-panel">
@@ -40,10 +49,16 @@
         <div id="moveStick" class="move-stick" role="group" aria-label="Kéo cần để di chuyển 360 độ"><span id="moveKnob"></span><small>360°</small></div>
         <button id="interactBtn" class="btn btn-light">Tương tác · E</button>
       </div>
+      <div id="mobileActions" class="mobile-actions" aria-label="Thao tác cảm ứng" hidden>
+        <button id="mobileRun" class="btn" aria-pressed="false">Giữ để chạy</button>
+        <button id="mobileExtra" class="btn" hidden></button>
+        <button id="mobileSecondary" class="btn" hidden></button>
+        <button id="mobilePrimary" class="btn btn-light">Tương tác</button>
+      </div>
 
       <div class="chapter-toolbar">
-        <button id="bagBtn" class="btn btn-outline-light">Ba lô <span id="bagCount">0</span> · I</button>
-        <button id="hintBtn" class="btn btn-outline-light">Sổ tay · H</button>
+        <button id="bagBtn" class="btn btn-outline-light">Ba lô <span id="bagCount">0</span><span class="desktop-shortcut"> · I</span></button>
+        <button id="hintBtn" class="btn btn-outline-light">Sổ tay<span class="desktop-shortcut"> · H</span></button>
         <button id="pauseBtn" class="btn btn-outline-light" aria-label="Tạm dừng">Ⅱ</button>
       </div>
       <div id="chapterProgress" class="chapter-progress">Chương 1 · Mật lệnh mùa đông</div>
@@ -180,33 +195,35 @@
   <script src="js/assets.js"></script>
   <script src="js/animation.js?v=8"></script>
   <script src="js/chapter-atlas.js?v=8"></script>
-  <script src="js/chapter-assets.js?v=17"></script>
+  <script src="js/chapter-assets.js?v=21"></script>
   <script src="js/levels/level2.js"></script>
   <script src="js/scene.js"></script>
-  <script src="js/input.js?v=8"></script>
+  <script src="js/input.js?v=21"></script>
   <script src="js/player.js?v=8"></script>
   <script src="js/collision.js?v=8"></script>
   <script src="js/camera.js"></script>
   <script src="js/dialogue.js"></script>
-  <script src="js/ui.js?v=10"></script>
+  <script src="js/ui.js?v=21"></script>
   <script src="js/save.js?v=17"></script>
   <script src="js/levels/chapter1.js?v=8"></script>
   <script src="js/levels/chapter2.js?v=13"></script>
   <script src="js/levels/chapter3.js?v=13"></script>
   <script src="js/levels/chapter4.js?v=16"></script>
-  <script src="js/levels/chapter5.js?v=17"></script>
-  <script src="js/chapter-scene.js?v=17"></script>
+  <script src="js/levels/chapter5.js?v=18"></script>
+  <script src="js/actor-layout.js?v=21"></script>
+  <script src="js/mobile-controls.js?v=22"></script>
+  <script src="js/chapter-scene.js?v=21"></script>
   <script src="js/river-chapter.js?v=9"></script>
-  <script src="js/river-scene.js?v=13"></script>
+  <script src="js/river-scene.js?v=21"></script>
   <script src="js/forest-chapter.js?v=13"></script>
-  <script src="js/forest-scene.js?v=13"></script>
+  <script src="js/forest-scene.js?v=21"></script>
   <script src="js/cave-chapter.js?v=16"></script>
-  <script src="js/cave-scene.js?v=16"></script>
-  <script src="js/supper-chapter.js?v=17"></script>
-  <script src="js/supper-scene.js?v=17"></script>
+  <script src="js/cave-scene.js?v=21"></script>
+  <script src="js/supper-chapter.js?v=18"></script>
+  <script src="js/supper-scene.js?v=21"></script>
   <script src="js/chapter-diaries-content.js?v=17"></script>
   <script src="js/chapter-diaries.js?v=17"></script>
-  <script src="js/chapter-game.js?v=17"></script>
+  <script src="js/chapter-game.js?v=21"></script>
   <script src="js/main.js?v=17"></script>
 </body>
 </html>
